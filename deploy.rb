@@ -10,8 +10,9 @@ Capistrano::Configuration.instance(:must_exist).load do
     set :base_dir,       "/var/www/apps/#{stage}"
     set :deploy_to,      "#{base_dir}/#{application}"
     set :mongrel_config, "#{current_path}/config/mongrel.yml"
-    set :mongrel_port,   cookbook[:mongrel_port] + production_mongrels if stage == :staging
+    
     set :db_table,       application + (stage == 'staging' ? '_' + stage : '')
+    set :mongrel_port,   cookbook[:mongrel_port] + production_mongrels if stage == :staging
     
     set :branch,         cookbook[stage][:branch] || 'master'
     set :mongrels,       cookbook[stage][:mongrels]
@@ -46,4 +47,4 @@ Capistrano::Configuration.instance(:must_exist).load do
 end
 
 ## Include recipes
-Dir[File.expand_path(File.dirname(__FILE__)) + '/recipes/*.rb'].each { |f| require f }
+Dir[File.expand_path(File.dirname(__FILE__)) + '/lib/*.rb'].each { |f| require f }

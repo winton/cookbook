@@ -18,4 +18,4 @@ set :cookbook, {
   }
 }
 
-require 'vendor/plugins/cookbook/recipes'
+require 'vendor/plugins/cookbook/deploy'
