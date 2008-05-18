@@ -7,14 +7,15 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :port,                cookbook[:ssh_port]
 
   task :stage_specific_vars, :roles => :app do
-    set :domain,         cookbook[stage][:domain]
-    set :branch,         cookbook[stage][:branch] || 'master'
     set :base_dir,       "/var/www/apps/#{stage}"
     set :deploy_to,      "#{base_dir}/#{application}"
-    set :mongrels,       cookbook[stage][:mongrels]
-    set :mongrel_port,   cookbook[:mongrel_port] + (stage == :staging ? production_mongrels : 0)
     set :mongrel_config, "#{current_path}/config/mongrel.yml"
+    set :mongrel_port,   cookbook[:mongrel_port] + production_mongrels if stage == :staging
     set :db_table,       application + (stage == 'staging' ? '_' + stage : '')
+    
+    set :branch,         cookbook[stage][:branch] || 'master'
+    set :mongrels,       cookbook[stage][:mongrels]
+    set :domain,         cookbook[stage][:domain]
     set :auth_user,      cookbook[stage][:auth_user]
     set :auth_pass,      cookbook[stage][:auth_pass]
   
