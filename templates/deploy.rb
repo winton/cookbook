@@ -1,7 +1,6 @@
-cookbook = {
+set :cookbook, {
   :application => 'my_app',
   :repository  => 'git@github.com:user/my-app.git',
-  :base_dir    => "/var/www/apps/#{stage}"
   
   :ssh_port     => 22,
   :mongrel_port => 3000,
@@ -19,4 +18,4 @@ cookbook = {
   }
 }
 
-require 'cookbook'
+require 'vendor/plugins/cookbook/recipes'
