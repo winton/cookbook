@@ -1,0 +1,10 @@
+--- 
+user: <%= runner %>
+group: <%= runner %>
+log_file: <%= deploy_to %>/shared/log/mongrel.log
+cwd: <%= deploy_to %>/current
+port: <%= mongrel_port %>
+environment: production
+pid_file: <%= deploy_to %>/shared/pids/mongrel.pid
+address: 127.0.0.1
+servers: <%= mongrels %>

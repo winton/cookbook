@@ -1,0 +1,12 @@
+development: &defaults
+  adapter: mysql
+  database: <%= db_table %>
+  username: <%= db_user %>
+  password: <%= db_pass %>
+  host: localhost
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
