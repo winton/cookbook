@@ -2,8 +2,8 @@ set :cookbook, {
   :application => 'my_app',
   :repository  => 'git@github.com:user/my-app.git',
   
-  :ssh_port     => 22,
   :mongrel_port => 3000,
+  :ssh_port     => 22,
   
   :production => {
     :domain   => 'myapp.com',
