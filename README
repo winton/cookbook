@@ -1,0 +1,10 @@
+= Cookbook
+
+Cookbook is both a collection of Capistrano recipes and an easier way to configure your deploy.rb file. The general idea is to take a clean Debian install and make it a fully featured Rails application server using solely Capistrano.
+
+== Install
+
+git submodule add git@github.com:winton/cookbook.git vendor/plugins/cookbook
+rake cookbook:setup
+
+Edit config/deploy.rb and run cap -T to check out all your nifty new recipes.
