@@ -10,11 +10,13 @@ Capistrano::Configuration.instance(:must_exist).load do
     set :stage, :test
   end
   
-  task :setup, :roles => :app do
+  # None of this works in a namespace
+  desc 'Set up stage-dependent properties'
+  task :setup_stage, :roles => :app do
     set :base_dir,       "#{cookbook[:base_dir]}/#{stage}"
     set :deploy_to,      "#{base_dir}/#{application}"
     set :mongrel_config, "#{current_path}/config/mongrel.yml"
-    
+  
     set :db_table,       application + (stage == 'staging' ? '_' + stage : '')
     set :mongrel_port,   cookbook[:mongrel_port] + production_mongrels if stage == :staging
     
@@ -23,7 +25,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     set :domain,         cookbook[stage][:domain]
     set :auth_user,      cookbook[stage][:auth_user]
     set :auth_pass,      cookbook[stage][:auth_pass]
-  
+
     role :app, domain
     role :web, domain
     role :db,  domain, :primary => true

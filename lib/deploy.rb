@@ -5,8 +5,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       [ :stop, :start, :restart ].each do |t|
         desc "#{t.to_s.capitalize} the mongrel appserver"
         task t, :roles => :app do
-          #invoke_command checks the use_sudo variable to determine how to run the mongrel_rails command
-          invoke_command "mongrel_rails cluster::#{t.to_s} -C #{mongrel_config}", :via => run_method
+          run "mongrel_rails cluster::#{t.to_s} -C #{mongrel_config}"
         end
       end
     end
@@ -46,8 +45,10 @@ Capistrano::Configuration.instance(:must_exist).load do
   
     desc "Make apps folder and own it, deploy:setup, config:create, :deploy:cold"
     task :create, :roles => :app do
-      sudo "mkdir -p #{base_dir}"
-      sudo "chown -R mongrel:mongrel #{base_dir}"
+      sudo_each [
+        "mkdir -p #{base_dir}",
+        "chown -R mongrel:mongrel #{base_dir}"
+      ]
       deploy.setup
       config.create.default
       deploy.cold

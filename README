@@ -2,9 +2,57 @@
 
 Cookbook is both a collection of Capistrano recipes and an easier way to configure your deploy.rb file. The general idea is to take a clean Debian install and make it a fully featured Rails application server using solely Capistrano.
 
+
 == Install
 
-git submodule add git@github.com:winton/cookbook.git vendor/plugins/cookbook
-rake cookbook:setup
+Add cookbook as a submodule in your Rails git project:
+
+  git submodule add git@github.com:winton/cookbook.git vendor/plugins/cookbook
+
+Create config/deploy.rb and config/cookbook:
+
+  rake cookbook:setup
 
 Edit config/deploy.rb and run cap -T to check out all your nifty new recipes.
+
+
+== Set up your fresh Debian server
+
+Log into your server as root. If you can't log in as root directly, but have the password (ServerBeach):
+
+  su
+
+Change root password if you haven't:
+  
+  passwd
+
+Add a mongrel user:
+  
+  adduser mongrel
+
+Edit /etc/sudoers with file lock:
+  
+  visudo
+
+Add this line to the end of the file. This gives the mongrel user "sudo without password" privileges:
+  
+  mongrel ALL=NOPASSWD: ALL
+
+On your machine:
+  
+  cap server:setup
+
+
+TODO
+  logrotated
+    http://github.com/gabriel/capitate/tree/master/lib/recipes/logrotated.rb
+  database cloning
+    http://github.com/engineyard/eycap/tree/master/lib/eycap/recipes/database.rb
+    http://github.com/smtlaissezfaire/cap_db_dump/tree/master/lib/cap_db_dump/recipes.rb
+  monit setup
+
+SOURCES
+  http://github.com/gabriel/capitate/tree/master/lib/recipes
+  http://github.com/denis/capone/tree/master/recipes
+  http://github.com/nakajima/capistrano-bells/tree/master/recipes
+  http://github.com/engineyard/eycap/tree/master/lib/eycap/recipes

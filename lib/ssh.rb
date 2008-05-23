@@ -7,32 +7,62 @@ Capistrano::Configuration.instance(:must_exist).load do
       ssh.upload_keys
     end
     
-    desc 'Creates an rsa ssh key pair in ~/.ssh'
+    desc "Creates an rsa ssh key pair in your ~/.ssh folder"
     task :create_keys do
-      system 'ssh-keygen -t rsa'
+      question = [
+        "This task generates a rsa ssh key pair in your ~/.ssh folder.",
+        "OK?"
+      ]
+      system('ssh-keygen -t rsa') if yes(question)
     end
     
-    desc 'Copies contents of ssh public keys into authorized_keys file'
+    desc "Creates an rsa ssh key pair in the server's ~/.ssh folder"
+    task :create_server_keys do
+      question = [
+        "This task generates a rsa ssh key pair in the server's ~/.ssh folder and displays the public key.",
+        "OK?"
+      ]
+      if yes(question)
+        u = ask "Create ssh keys for which user? (default: #{user})"
+        u = user if u.empty?
+        
+        p = ask "Enter a password for this key:"
+        
+        sudo_each [
+          "ssh-keygen -t rsa -N '#{p}' -q -f /home/#{u}/.ssh/id_rsa",
+          "chmod 0700 /home/#{u}/.ssh",
+          "chown -R #{u} /home/#{u}/.ssh"
+        ]
+        puts "\n" + sudo_and_return("tail -1 /home/#{u}/.ssh/id_rsa.pub") + "\n"
+      end
+    end
+    
+    desc "Copies contents of ssh public keys into authorized_keys file"
     task :upload_keys do
-      keys = Capistrano::CLI.ui.ask 'Press enter to copy all public keys (~/.ssh/*.pub), or paste a key: '
-      keys = get_ssh_keys if keys.strip.empty?
-      if keys.strip.empty?
-        answer = Capistrano::CLI.ui.ask 'No keys found. Generate ssh keys now? (y/n): '
-        ssh.setup if answer.downcase.include?('y')
-      else
-        sudo 'test -d ~/.ssh || mkdir ~/.ssh'
-        sudo 'chmod 0700 ~/.ssh'
-        sudo 'touch ~/.ssh/authorized_keys'
-        sudo 'chmod 0600 ~/.ssh/authorized_keys'
-        sudo "echo \"#{keys}\" >> ~/.ssh/authorized_keys"
+      question = [
+        "This task copies all of your public keys in ~/.ssh to the server's authorized_keys.",
+        "OK?"
+      ]
+      if yes(question)
+        u = ask "Upload ssh public keys to which user's account? (default: #{user})"
+        u = user if u.empty?
+      
+        keys = ask "Press enter to copy all public keys (~/.ssh/*.pub), or paste a key: "
+        keys = get_ssh_keys if keys.empty?
+      
+        if keys.empty?
+          ssh.setup if yes("No keys found. Generate ssh keys now?")
+        else
+          sudo_each [
+            "test -d /home/#{u}/.ssh || mkdir /home/#{u}/.ssh",
+            "touch /home/#{u}/.ssh/authorized_keys",
+            "echo \"#{keys}\" >> /home/#{u}/.ssh/authorized_keys",
+            "chmod 0700 /home/#{u}/.ssh",
+            "chmod 0600 /home/#{u}/.ssh/authorized_keys",
+            "chown -R #{u} /home/#{u}/.ssh",
+          ]
+        end
       end
-    end
-    
-    def get_ssh_keys
-      keys = Dir[File.expand_path('~/.ssh/*.pub')].collect do |f|
-        File.open(f).collect { |line| line.strip.empty? ? nil : line.strip }.compact
-      end
-      keys.flatten.join "\n"
     end
   end
 
