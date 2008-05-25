@@ -1,17 +1,23 @@
 Capistrano::Configuration.instance(:must_exist).load do
   
   namespace :debian do
-    namespace :create do
-      task :default do
-        debian.sshd_config
-        debian.iptables
-        debian.locales
-        debian.bash_profile      
+    desc "Configure and install a fresh Debian server"
+    task :deploy do
+      if yes("Have you created the user defined in config/deploy.rb? (See README)")
+        debian.create.sshd_config
+        debian.create.iptables
+        debian.create.locales
+        debian.create.bash_profile      
         debian.aptitude.update
         debian.aptitude.upgrade
         debian.aptitude.essential
+        debian.install.mysql
+        debian.install.ruby
+        debian.install.rubygems
       end
+    end
     
+    namespace :create do
       desc "Uploads the bash_profile file in config/cookbook"
       task :bash_profile do
         question = [
@@ -19,8 +25,8 @@ Capistrano::Configuration.instance(:must_exist).load do
           "OK?"
         ]
         if yes(question)
-          u = ask "Update bash_profile for which user? (default: #{user})", user
-          upload_from_erb "/home/#{u}/.bash_profile", binding, :chown => u
+          usr = ask "Update bash_profile for which user? (default: #{user})", user
+          upload_from_erb "/home/#{usr}/.bash_profile", binding, :chown => usr
         end
       end
     
@@ -80,6 +86,37 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc 'Aptitude install build-essential'
       task :essential do
         sudo_and_puts 'aptitude install build-essential -q -y'
+      end
+    end
+    
+    namespace :install do
+      desc 'Install MySQL'
+      task :mysql, :roles => :db do
+        sudo_and_puts 'aptitude install mysql-server mysql-client libmysqlclient15-dev libmysql-ruby -q -y'
+        upload_from_erb '/etc/mysql/my.cnf', binding, :chown => 'root', :chmod => '0644'
+        sudo '/etc/init.d/mysql restart'
+        puts [
+          "\nIt is highly recommended you run mysql_secure_installation manually.",
+          "See http://dev.mysql.com/doc/refman/5.1/en/mysql-secure-installation.html\n"
+        ].join("\n")
+      end
+      
+      desc 'Install Ruby'
+      task :ruby do
+        install_source(:ruby) do |path|
+          sudo "cd #{path} && ./configure && make && sudo make install"
+        end
+      end
+      
+      desc 'Install RubyGems'
+      task :rubygems do
+        install_source(:rubygems) do |path|
+          sudo_each [
+            "cd #{path} && ruby setup.rb",
+            "ln -s /usr/bin/gem1.8 /usr/bin/gem"
+          ]
+        end
+        gems.update
       end
     end
   end

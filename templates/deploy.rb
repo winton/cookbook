@@ -16,6 +16,11 @@ set :cookbook, {
     :mongrels  => 1,          # Port 3002
     :auth_user => 'staging',  # Nginx HTTP authorization
     :auth_pass => 'password'
+  },
+  
+  :sources => {
+    :ruby     => 'ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6-p114.tar.gz',
+    :rubygems => 'http://rubyforge.org/frs/download.php/35283/rubygems-1.1.1.tgz'
   }
 }
 

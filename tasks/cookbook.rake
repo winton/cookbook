@@ -19,6 +19,6 @@ namespace :cookbook do
       system 'mv config/cookbook config/cookbook_old'
     end
     puts '=> Creating config/cookbook...'
-    system "cp -R #{File.dirname(__FILE__)}/../templates/shared #{RAILS_ROOT}/config/cookbook"
+    system "cp -R #{File.dirname(__FILE__)}/../templates/config #{RAILS_ROOT}/config/cookbook"
   end
 end

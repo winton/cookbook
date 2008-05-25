@@ -5,10 +5,13 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :list do
       stream "gem list"
     end
-  
+    
     desc "Update gems on remote server"
     task :update do
-      sudo "gem update"
+      sudo_each [
+        "gem update --system",
+        "gem update"
+      ]
     end
   
     desc "Install a gem on the remote server"
