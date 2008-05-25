@@ -23,9 +23,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         "OK?"
       ]
       if yes(question)
-        u = ask "Create ssh keys for which user? (default: #{user})"
-        u = user if u.empty?
-        
+        u = ask "Create ssh keys for which user? (default: #{user})", user
         p = ask "Enter a password for this key:"
         
         sudo_each [
@@ -33,7 +31,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           "chmod 0700 /home/#{u}/.ssh",
           "chown -R #{u} /home/#{u}/.ssh"
         ]
-        puts "\n" + sudo_and_return("tail -1 /home/#{u}/.ssh/id_rsa.pub") + "\n"
+        sudo_and_puts "tail -1 /home/#{u}/.ssh/id_rsa.pub"
       end
     end
     
@@ -44,19 +42,16 @@ Capistrano::Configuration.instance(:must_exist).load do
         "OK?"
       ]
       if yes(question)
-        u = ask "Upload ssh public keys to which user's account? (default: #{user})"
-        u = user if u.empty?
+        u = ask "Upload ssh public keys to which user? (default: #{user})", user
+        k = ask "Press enter to copy all public keys (~/.ssh/*.pub), or paste a key: ", get_ssh_keys
       
-        keys = ask "Press enter to copy all public keys (~/.ssh/*.pub), or paste a key: "
-        keys = get_ssh_keys if keys.empty?
-      
-        if keys.empty?
+        if k.empty?
           ssh.setup if yes("No keys found. Generate ssh keys now?")
         else
           sudo_each [
             "test -d /home/#{u}/.ssh || mkdir /home/#{u}/.ssh",
             "touch /home/#{u}/.ssh/authorized_keys",
-            "echo \"#{keys}\" >> /home/#{u}/.ssh/authorized_keys",
+            "echo \"#{k}\" >> /home/#{u}/.ssh/authorized_keys",
             "chmod 0700 /home/#{u}/.ssh",
             "chmod 0600 /home/#{u}/.ssh/authorized_keys",
             "chown -R #{u} /home/#{u}/.ssh",

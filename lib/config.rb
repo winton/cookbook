@@ -20,23 +20,23 @@ Capistrano::Configuration.instance(:must_exist).load do
     
       desc "Render database.yml.erb and copy to shared config"
       task :database, :roles => :app do
-        upload_from_erb 'database.yml', "#{shared_path}/config/database.yml"
+        upload_from_erb "#{shared_path}/config/database.yml"
       end
 
       desc "Render mongrel.yml.erb and copy to shared config"
       task :mongrel, :roles => :app do
-        upload_from_erb 'mongrel.yml', "#{shared_path}/config/mongrel.yml"
+        upload_from_erb "#{shared_path}/config/mongrel.yml"
       end
 
       desc "Render nginx.conf.erb and copy to shared config"
       task :nginx, :roles => :app do
-        upload_from_erb 'nginx.conf', "#{shared_path}/config/nginx.conf"
+        upload_from_erb "#{shared_path}/config/nginx.conf"
         sudo "cp -Rf #{shared_path}/config/nginx.conf #{nginx_dir}/nginx.conf"
       end
 
       desc "Render vhost.conf.erb and copy to shared config"
       task :vhost, :roles => :app do
-        upload_from_erb 'vhost.conf', "#{shared_path}/config/vhost.conf"
+        upload_from_erb "#{shared_path}/config/vhost.conf"
         sudo_each [
           "mkdir -p #{nginx_dir}/vhosts",
           "cp -Rf #{shared_path}/config/vhost.conf #{nginx_dir}/vhosts/#{application}_#{stage}.conf"
