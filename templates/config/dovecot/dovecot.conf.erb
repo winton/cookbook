@@ -1,0 +1,85 @@
+## Dovecot configuration file
+#
+base_dir = /var/run/dovecot/
+#
+# imap imaps pop3 pop3s (use imaps and pop3s if configured for SSL)
+protocols = imap pop3
+#
+# Uncomment the ssl_listen statements and comment out listen if using SSL
+protocol imap {
+  listen = *:143
+    # ssl_listen = *:993
+}
+protocol pop3 {
+  listen = *:110
+  # ssl_listen = *:995
+}
+
+log_timestamp = “%Y-%m-%d %H:%M:%S ”
+syslog_facility = mail
+
+# Uncomment these if using SSL
+#ssl_cert_file = /etc/ssl/mycompany/mailserver/mail-cert.pem
+#ssl_key_file = /etc/ssl/mycompany/mailserver/mail-key.pem
+#ssl_ca_file = /etc/ssl/mycompany/ca/mycompany.pem
+#ssl_verify_client_cert = yes
+#ssl_parameters_regenerate = 168
+#verbose_ssl = no
+
+# Where the mailboxes are located
+mail_location = maildir:/var/vmail/%d/%u
+
+mail_extra_groups = mail
+mail_debug = no
+first_valid_uid = 150
+last_valid_uid = 150
+maildir_copy_with_hardlinks = yes
+
+protocol imap {
+  login_executable = /usr/lib/dovecot/imap-login
+  mail_executable = /usr/lib/dovecot/imap
+  imap_max_line_length = 65536
+}
+protocol pop3 {
+  login_executable = /usr/lib/dovecot/pop3-login
+  mail_executable = /usr/lib/dovecot/pop3
+  pop3_uidl_format = %08Xu%08Xv
+}
+protocol lda {
+  postmaster_address = postmaster@mydomain.com
+  sendmail_path = /usr/lib/sendmail
+  auth_socket_path = /var/run/dovecot/auth-master
+}
+
+auth_verbose = no
+auth_debug = no
+auth_debug_passwords = no
+
+auth default {
+  mechanisms = plain
+  passdb sql {
+    args = /etc/dovecot/dovecot-sql.conf
+  }
+  userdb sql {
+    args = /etc/dovecot/dovecot-sql.conf
+  }
+  user = nobody
+  socket listen {
+    master {
+      path = /var/run/dovecot/auth-master
+      mode = 0660
+      user = vmail
+      group = mail
+    }
+    client {
+      path = /var/spool/postfix/private/auth
+      mode = 0660
+      user = postfix
+      group = postfix
+    }
+  }
+  
+  # If you want client certificates, use these lines
+  # ssl_require_client_cert = yes
+  # ssl_username_from_cert = yes
+}

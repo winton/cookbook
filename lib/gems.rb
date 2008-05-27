@@ -3,7 +3,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   namespace :gems do  
     desc "List gems on remote server"
     task :list do
-      stream "gem list"
+      run_puts "gem list"
     end
     
     desc "Update gems on remote server"
@@ -13,17 +13,41 @@ Capistrano::Configuration.instance(:must_exist).load do
         "gem update"
       ]
     end
-  
-    desc "Install a gem on the remote server"
-    task :install do
-      gem_name = ask 'Enter the name of the gem to install:'
-      sudo "gem install #{gem_name}"
+    
+    namespace :install do
+      desc "Install a gem on the remote server"
+      task :default do
+        gem_install ask('Enter the name of the gem to install:')
+      end
+      
+      desc 'Install Rails, HAML, and Mongrel'
+      task :all do
+        gems.install.haml
+        gems.install.mongrel
+        gems.install.rails
+      end
+      
+      desc 'Install HAML'
+      task :haml do
+        gem_install :haml, '--no-ri'
+      end
+      
+      desc 'Install Mongrel'
+      task :mongrel do
+        gem_install :mongrel
+        gem_install :mongrel_cluster
+      end
+      
+      desc 'Install Rails'
+      task :rails do
+        gem_install :rails
+      end
     end
   
     desc "Uninstall a gem from the remote server"
     task :remove do
       gem_name = ask 'Enter the name of the gem to remove:'
-      sudo "gem install #{gem_name}"
+      sudo "gem uninstall #{gem_name}"
     end
   end
 

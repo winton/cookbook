@@ -44,6 +44,10 @@ On your machine:
 
 
 TODO
+  Set up postfixadmin on nginx
+    Nginx php vhost
+      http://bc-dev.net/2008/05/07/mysql-nginx-and-php-on-ubuntu-804/
+    
   logrotated
     http://github.com/gabriel/capitate/tree/master/lib/recipes/logrotated.rb
   database cloning

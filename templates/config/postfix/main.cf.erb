@@ -1,0 +1,36 @@
+smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+biff = no
+append_dot_mydomain = no
+#delay_warning_time = 4h
+myhostname = mail.wintoni.us
+myorigin = wintoni.us
+mydestination = localhost
+relayhost =
+mynetworks = 127.0.0.0/8
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+smtpd_recipient_restrictions =
+   permit_mynetworks
+   permit_sasl_authenticated
+   reject_unauth_destination
+   permit
+
+# Virtual mailbox settings
+virtual_mailbox_domains = proxy:mysql:$config_directory/mysql_virtual_domains_maps.cf
+virtual_mailbox_base = /var/vmail
+virtual_mailbox_maps = proxy:mysql:$config_directory/mysql_virtual_mailbox_maps.cf
+virtual_alias_maps = proxy:mysql:$config_directory/mysql_virtual_alias_maps.cf
+virtual_minimum_uid = 150
+virtual_uid_maps = static:150
+virtual_gid_maps = static:8
+virtual_transport = dovecot
+dovecot_destination_recipient_limit = 1
+
+# SASL Authentication
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_exceptions_networks = $mynetworks
+smtpd_sasl_security_options = noanonymous
+broken_sasl_auth_clients = yes
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth

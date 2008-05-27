@@ -10,13 +10,15 @@ Capistrano::Configuration.instance(:must_exist).load do
       
       desc "Create database"
       task :db, :roles => :db do
-        run "echo \"CREATE DATABASE #{db_table}\" | #{mysql_call}"
+        mysql_run "CREATE DATABASE #{db_table}"
       end
     
       desc "Create database user"
       task :user, :roles => :db do
-        run "echo \"CREATE USER '#{db_user}'@'localhost' IDENTIFIED BY '#{db_pass}'\" | #{mysql_call}"
-        run "echo \"GRANT ALL PRIVILEGES ON *.* TO '#{db_user}'@'localhost'\" | #{mysql_call}"
+        mysql_run [
+          "CREATE USER '#{db_user}'@'localhost' IDENTIFIED BY '#{db_pass}'",
+          "GRANT ALL PRIVILEGES ON *.* TO '#{db_user}'@'localhost'"
+        ]
       end
     end
     
@@ -38,13 +40,15 @@ Capistrano::Configuration.instance(:must_exist).load do
       
       desc "Destroy database"
       task :db, :roles => :db do
-        run "echo \"DROP DATABASE #{db_table}\" | #{mysql_call}"
+        mysql_run "DROP DATABASE #{db_table}"
       end
       
       desc "Destroy database user"
       task :user, :roles => :db do
-        run "echo \"revoke all privileges, grant option from '#{db_user}'@'localhost';\" | #{mysql_call}"
-        run "echo \"DROP USER '#{db_user}'@'localhost'\" | #{mysql_call}"
+        mysql_run [
+          "REVOKE ALL PRIVILEGES, GRANT OPTION FROM '#{db_user}'@'localhost'",
+          "DROP USER '#{db_user}'@'localhost'"
+        ]
       end
     end
   end

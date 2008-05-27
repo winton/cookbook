@@ -7,7 +7,6 @@ Capistrano::Configuration.instance(:must_exist).load do
         config.create.folder
         config.create.database
         config.create.mongrel
-        config.create.nginx
         config.create.vhost
         config.create.htpasswd
         config.create.survive_reboot
@@ -28,15 +27,9 @@ Capistrano::Configuration.instance(:must_exist).load do
         upload_from_erb "#{shared_path}/config/mongrel.yml"
       end
 
-      desc "Render nginx.conf.erb and copy to shared config"
-      task :nginx, :roles => :app do
-        upload_from_erb "#{shared_path}/config/nginx.conf"
-        sudo "cp -Rf #{shared_path}/config/nginx.conf #{nginx_dir}/nginx.conf"
-      end
-
       desc "Render vhost.conf.erb and copy to shared config"
       task :vhost, :roles => :app do
-        upload_from_erb "#{shared_path}/config/vhost.conf"
+        upload_from_erb "#{shared_path}/config/vhost.conf", binding, :folder => 'nginx'
         sudo_each [
           "mkdir -p #{nginx_dir}/vhosts",
           "cp -Rf #{shared_path}/config/vhost.conf #{nginx_dir}/vhosts/#{application}_#{stage}.conf"

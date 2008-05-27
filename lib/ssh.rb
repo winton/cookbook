@@ -31,7 +31,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           "chmod 0700 /home/#{usr}/.ssh",
           "chown -R #{usr} /home/#{usr}/.ssh"
         ]
-        sudo_and_puts "tail -1 /home/#{u}/.ssh/id_rsa.pub"
+        sudo_each "tail -1 /home/#{u}/.ssh/id_rsa.pub"
       end
     end
     

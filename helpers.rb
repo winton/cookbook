@@ -1,6 +1,35 @@
 require 'erb'
 
 
+# Install
+
+def gem_install(name, options='')
+  sudo_puts "gem install #{name} #{options}"
+end
+
+def unpack_source(source)
+  url  = eval "sources_#{source}"  # see cookbook[:sources]
+  name = File.basename url
+  src  = "/home/#{user}/sources"
+  base = nil
+  [ 'tar.gz', 'tgz' ].each do |ext|
+    base = name[0..((ext.length + 2) * -1)] if name.include?(ext)
+  end
+  run_each [
+    "mkdir -p #{src}",
+    "cd #{src} && wget --quiet #{url}",
+    "tar -xzvf #{src}/#{name} -C #{src}"
+  ]
+  "#{src}/#{base}"
+end
+
+def install_source(source)
+  path = unpack_source source
+  yield path
+  sudo "rm -Rf #{path}"
+end
+
+
 # Files
 
 def get_ssh_keys
@@ -10,36 +39,36 @@ def get_ssh_keys
   keys.flatten.join("\n").strip
 end
 
-def install_source(source)   # See cookbook[:sources]
-  src  = "/home/#{user}/sources"
-  url  = eval "sources_#{source}"
-  name = File.basename url
-  base = nil
-  [ 'tar.gz', 'tgz' ].each do |ext|
-    base = name[0..((ext.length + 2) * -1)] if name.include?(ext)
+def upload_from_erb(destination, bind=nil, options={})
+  # options[ :chown  => owner of file (default: deploy user),
+  #          :chmod  => 0644 etc
+  #          :folder => 'postfix' etc ]
+  if destination.respond_to?(:uniq)
+    destination.each { |d| upload_from_erb d, bind, options }
+  else
+    template = File.basename destination
+    template = template[1..-1] if template[0..0] == '.'
+    folder   = options[:folder] ? options[:folder] + '/' : ''
+    template = File.expand_path("../../../config/cookbook/#{folder}#{template}.erb", File.dirname(__FILE__))
+    template = File.read template
+    sudo "touch #{destination}"
+    sudo "chown #{user} #{destination}"
+    put ERB.new(template).result(bind || binding), destination
+    sudo("chown #{options[:chown]} #{destination}") if options[:chown]
+    sudo("chmod #{options[:chmod]} #{destination}") if options[:chmod]
   end
-  run_each [
-    "mkdir #{src}",
-    "cd #{src} && wget --quiet #{url}",
-    "tar -xzvf #{src}/#{name} -C #{src}"
-  ]
-  yield "#{src}/#{base}"
-  sudo "rm -Rf #{src}"
-end
-
-def upload_from_erb(destination, bind, options={}) # options[ :chown => owner of file (default: deploy user),
-  template = File.basename destination             #          :chmod => 0644 etc]
-  template = File.expand_path("../../../config/cookbook/#{template}.erb", File.dirname(__FILE__))
-  template = File.read template
-  sudo "touch #{destination}"
-  sudo "chown #{user} #{destination}"
-  put ERB.new(template).result(bind || binding), destination
-  sudo("chown #{options[:chown]} #{destination}") if options[:chown]
-  sudo("chmod #{options[:chmod]} #{destination}") if options[:chmod]
 end
 
 
 # MySQL
+
+def mysql_run(sql)
+  if sql.respond_to?(:uniq)
+    sql.each { |s| mysql_run s }
+  else
+    run "echo \"#{sql}\" | #{mysql_call}"
+  end
+end
 
 def mysql_call
   @mysql_root_password = @mysql_root_password || ask("Password for mysql root:")
@@ -64,34 +93,26 @@ end
 
 # Runners
 
-def run_and_return(cmd, sudo=false)
-  output = []
+def run_each(*args, &block)
+  cmd  = args[0]
+  sudo = args[1]
   if cmd.respond_to?(:uniq)
-    output = cmd.collect { |c| run_and_return c, sudo }
+    cmd.each  { |c| run_each c, sudo, &block }
   elsif sudo
-    sudo(cmd) { |ch, st, data| output << data }
+    sudo(cmd) { |ch, st, data| block.call(data) if block }
   else
-    run(cmd)  { |ch, st, data| output << data }
+    run(cmd)  { |ch, st, data| block.call(data) if block }
   end
-  output.join("\n")
 end
 
-def sudo_and_return(cmd)
-  run_and_return cmd, true
+def sudo_each(cmds, &block)
+  run_each cmds, true, &block
 end
 
-def run_and_puts(cmd, sudo=false)
-  puts "\n" + run_and_return(cmd, sudo) + "\n"
+def run_puts(cmds, &block)
+  run_each(cmds) { |data| puts data }
 end
 
-def sudo_and_puts(cmd)
-  run_and_puts cmd, true
-end
-
-def sudo_each(cmds)
-  cmds.each { |cmd| sudo cmd }
-end
-
-def run_each(cmds)
-  cmds.each { |cmd| run cmd }
+def sudo_puts(cmds, &block)
+  sudo_each(cmds) { |data| puts data }
 end
