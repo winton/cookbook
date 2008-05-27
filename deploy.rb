@@ -1,6 +1,6 @@
 # Require helpers and recipes
 
-require File.expand_path('helpers.rb', File.dirname(__FILE__))
+require File.expand_path('helper.rb', File.dirname(__FILE__))
 Dir[    File.expand_path('lib/*.rb',   File.dirname(__FILE__))].each do |f|
   require f
 end
