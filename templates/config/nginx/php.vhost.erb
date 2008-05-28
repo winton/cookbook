@@ -1,0 +1,27 @@
+server {
+    listen       80;
+    server_name  <%= php_domain %>;
+
+    access_log  logs/<%= php_domain %>.log  main;
+
+    location / {
+        root   html/<%= php_domain %>;
+        index  index.html index.htm;
+    }
+    
+    # redirect server error pages to the static page /50x.html
+    
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    
+    location ~ \.php$ {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  html/<%= php_domain %>$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+}

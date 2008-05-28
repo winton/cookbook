@@ -1,7 +1,7 @@
 # Require helpers and recipes
 
-require File.expand_path('helper.rb', File.dirname(__FILE__))
-Dir[    File.expand_path('lib/*.rb',   File.dirname(__FILE__))].each do |f|
+require File.expand_path('helpers.rb', File.dirname(__FILE__))
+Dir[    File.expand_path('book/*.rb',  File.dirname(__FILE__))].each do |f|
   require f
 end
 
@@ -24,7 +24,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :db_pass,             fetch(:db_pass,             '')
   set :use_sudo,            fetch(:use_sudo,            false)
   set :auth_user,           fetch(:auth_user,           false)
-  set :nginx_dir,           fetch(:nginx_dir,           '/etc/nginx')
+  set :nginx_dir,           fetch(:nginx_dir,           '/usr/local/nginx/conf')
   set :staging_mongrels,    fetch(:staging_mongrels,    1)
   set :production_mongrels, fetch(:production_mongrels, 2)
   

@@ -21,6 +21,7 @@ set :cookbook, {
   :sources => {
     :lighttpd     => 'http://www.lighttpd.net/download/lighttpd-1.4.19.tar.gz',
     :nginx        => 'http://sysoev.ru/nginx/nginx-0.6.31.tar.gz',
+    :postfix      => 'http://mirrors.rootservices.net/postfix/official/postfix-2.5.2.tar.gz',
     :postfixadmin => 'http://internap.dl.sourceforge.net/sourceforge/postfixadmin/postfixadmin_2.2.0.tar.gz',
     :ruby         => 'ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6-p114.tar.gz',
     :rubygems     => 'http://rubyforge.org/frs/download.php/35283/rubygems-1.1.1.tgz'

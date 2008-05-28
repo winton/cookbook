@@ -104,46 +104,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       end
     end
     
-    namespace :install do
-      desc "Install Dovecot"
-      task :dovecot do
-        sudo 'aptitude install dovecot-imapd dovecot-pop3d -q -y'
-        upload_from_erb [
-          "/etc/dovecot/dovecot.conf",
-          "/etc/dovecot/dovecot-sql.conf"
-        ], binding, :chmod => '0600', :chown => 'root', :folder => 'dovecot'
-        sudo 'chown vmail /etc/dovecot/*.conf'
-      end
-      
-      desc "Install Postfix"
-      task :postfix do
-        mysql_run [
-          "CREATE DATABASE mail",
-          "GRANT ALL PRIVILEGES ON mail.* TO 'mail'@'localhost' IDENTIFIED BY 'mail'"
-        ]
-        upload_from_erb "/home/#{user}/postfix_sql", binding, :folder => 'postfix'
-        run "mysql -u mail --password=mail mail < /home/#{user}/postfix_sql"
-        sudo 'rm /home/#{user}/postfix_sql'
-        ask [
-          "Please run 'sudo aptitude install postfix postfix-mysql -q -y' manually.",
-          "Press enter when the install finishes."
-        ]
-        sudo_each [
-          'useradd -r -u 150 -g mail -d /var/vmail -s /sbin/nologin -c "Virtual mailbox" vmail',
-          'mkdir /var/vmail',
-          'chmod 770 /var/vmail/',
-          'chown vmail:mail /var/vmail/'
-        ]
-        upload_from_erb [
-          "/etc/postfix/main.cf",
-          "/etc/postfix/master.cf",
-          "/etc/postfix/mysql_virtual_alias_maps.cf",
-          "/etc/postfix/mysql_virtual_domains_maps.cf",
-          "/etc/postfix/mysql_virtual_mailbox_limit_maps.cf",
-          "/etc/postfix/mysql_virtual_mailbox_maps.cf",
-        ], binding, :chmod => '0644', :chown => 'root', :folder => 'postfix'
-      end
-      
+    namespace :install do      
       desc "Install Lighttpd"
       task :lighttpd do
         sudo_puts 'aptitude install libpcre3-dev libbz2-dev -q -y'
@@ -163,9 +124,14 @@ Capistrano::Configuration.instance(:must_exist).load do
         debian.config.nginx
       end
       
-      desc "Install PHP with spawn-fcgi support for Nginx"
+      desc "Install PHP"
       task :php do
         sudo_puts 'aptitude install php5-cli php5-cgi php5-mysql php5-xcache -q -y'
+        upload_from_erb [
+          '/usr/local/bin/php-fastcgi',
+          '/etc/init.d/init-fastcgi'
+        ], binding, :chown => 'root', :chmod => '+x', :folder => 'debian'
+        sudo '/usr/sbin/update-rc.d -f init-fastcgi defaults'
       end
       
       desc 'Install MySQL'

@@ -28,29 +28,36 @@ Capistrano::Configuration.instance(:must_exist).load do
       end
     end
 
-    desc "Custom restart task for mongrel cluster"
+    desc "Restart mongrel cluster"
     task :restart, :roles => :app, :except => { :no_release => true } do
       deploy.mongrel.restart
     end
 
-    desc "Custom start task for mongrel cluster"
+    desc "Start mongrel cluster"
     task :start, :roles => :app do
       deploy.mongrel.start
     end
 
-    desc "Custom stop task for mongrel cluster"
+    desc "Stop mongrel cluster"
     task :stop, :roles => :app do
       deploy.mongrel.stop
     end
+    
+    desc "Configures rails, nginx, and mongrel_cluster"
+    task :config, :roles => :app do
+      rails.config.default
+      mongrel.config.default
+      nginx.config.default
+    end
   
-    desc "Make apps folder and own it, deploy:setup, config:create, :deploy:cold"
+    desc "Make apps folder and own it, deploy:setup, deploy:config, :deploy:cold"
     task :create, :roles => :app do
       sudo_each [
         "mkdir -p #{base_dir}",
         "chown -R mongrel:mongrel #{base_dir}"
       ]
       deploy.setup
-      config.create.default
+      deploy.config
       deploy.cold
     end
   

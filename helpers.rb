@@ -42,14 +42,15 @@ end
 def upload_from_erb(destination, bind=nil, options={})
   # options[ :chown  => owner of file (default: deploy user),
   #          :chmod  => 0644 etc
-  #          :folder => 'postfix' etc ]
+  #          :folder => 'postfix' etc,
+  #          :name   => name of template if differs from destination ]
   if destination.respond_to?(:uniq)
     destination.each { |d| upload_from_erb d, bind, options }
   else
     template = File.basename destination
     template = template[1..-1] if template[0..0] == '.'
     folder   = options[:folder] ? options[:folder] + '/' : ''
-    template = File.expand_path("../../../config/cookbook/#{folder}#{template}.erb", File.dirname(__FILE__))
+    template = File.expand_path("../../../config/cookbook/#{folder}#{options[:name]||template}.erb", File.dirname(__FILE__))
     template = File.read template
     sudo "touch #{destination}"
     sudo "chown #{user} #{destination}"
