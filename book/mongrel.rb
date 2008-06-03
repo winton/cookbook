@@ -5,11 +5,10 @@ Capistrano::Configuration.instance(:must_exist).load do
       ETC_FOLDER = '/usr/local/etc/mongrel_cluster'
       GEM_FOLDER = '/usr/local/lib/ruby/gems/1.8/gems/mongrel_cluster-1.0.5'
       
-      desc "Copy mongrel config and make the cluster restart-proof"
+      desc "Copy mongrel config files"
       task :default, :roles => :app do
         mongrel.config.cluster
         mongrel.config.nginx
-        mongrel.config.survive_reboot
       end
 
       desc "Render mongrel.yml.erb and copy to etc"
@@ -34,7 +33,10 @@ Capistrano::Configuration.instance(:must_exist).load do
       
       desc "Destroy all files created by config:create"
       task :destroy, :roles => :app do
-        sudo "rm -f #{ETC}/#{application}_#{stage}.yml"
+        sudo_each [
+          "rm -f #{ETC_FOLDER}/#{application}_#{stage}.yml",
+          "rm -f #{nginx_dir}/vhosts/#{application}_#{stage}.conf"
+        ]
       end
     end
   end

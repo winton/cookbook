@@ -12,7 +12,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   
   # None of this works in a namespace
   desc 'Set up stage-dependent properties'
-  task :setup_stage, :roles => :app do
+  task :setup_stage do
     set :base_dir,       "#{cookbook[:base_dir]}/#{stage}"
     set :deploy_to,      "#{base_dir}/#{application}"
     set :mongrel_config, "#{current_path}/config/mongrel.yml"

@@ -25,6 +25,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :use_sudo,            fetch(:use_sudo,            false)
   set :auth_user,           fetch(:auth_user,           false)
   set :nginx_dir,           fetch(:nginx_dir,           '/usr/local/nginx/conf')
+  set :mysql_dir,           fetch(:mysql_dir,           '/etc/mysql')
   set :staging_mongrels,    fetch(:staging_mongrels,    1)
   set :production_mongrels, fetch(:production_mongrels, 2)
   
@@ -38,7 +39,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   # Events
 
-  on :before, 'setup_stage', :except => [ :staging, :testing ]  # Executed before every task
-  after 'deploy:update_code', 'config:to_app'                   # Copy shared config to app
+  on :before, 'setup_stage',  :except => [ :setup_stage, :staging, :testing ] # Executed before every task
+  after 'deploy:update_code', 'config:to_app' # Copy shared config to app
   
 end

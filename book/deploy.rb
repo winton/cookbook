@@ -42,13 +42,6 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :stop, :roles => :app do
       deploy.mongrel.stop
     end
-    
-    desc "Configures rails, nginx, and mongrel_cluster"
-    task :config, :roles => :app do
-      rails.config.default
-      mongrel.config.default
-      nginx.config.default
-    end
   
     desc "Make apps folder and own it, deploy:setup, deploy:config, :deploy:cold"
     task :create, :roles => :app do
@@ -57,14 +50,23 @@ Capistrano::Configuration.instance(:must_exist).load do
         "chown -R mongrel:mongrel #{base_dir}"
       ]
       deploy.setup
-      deploy.config
+      if platform == :mongrel
+        rails.config.default
+        mongrel.config.default
+        nginx.config.mongrel
+      elsif platform == :php
+        nginx.config.php
+      end
       deploy.cold
     end
   
     desc "Stop servers and destroy all files"
     task :destroy, :roles => :app do
       deploy.stop
-      config.destroy
+      if platform == :mongrel
+        mongrel.config.destroy
+      end
+      nginx.config.destroy
       sudo "rm -Rf #{deploy_to}"
     end
   end

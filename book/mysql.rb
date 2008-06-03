@@ -51,6 +51,18 @@ Capistrano::Configuration.instance(:must_exist).load do
         ]
       end
     end
+    
+    desc "Updates my.cnf from the file in config/cookbook"
+    task :config do
+      question = [
+        "This task updates your server's my.cnf (MySQL config) with the one in config/cookbook.",
+        "OK?"
+      ]
+      if yes(question)
+        upload_from_erb "#{mysql_dir}/my.cnf", binding, :chown => 'root', :chmod => '0644', :folder => 'mysql'
+        sudo "/etc/init.d/mysql restart"
+      end
+    end
   end
 
 end
