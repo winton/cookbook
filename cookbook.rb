@@ -42,6 +42,8 @@ Capistrano::Configuration.instance(:must_exist).load do
   # Events
 
   on :before, 'setup_stage',  :except => [ :setup_stage, :staging, :testing ] # Executed before every task
-  after 'deploy:update_code', 'rails:config:to_app' # Copy shared config to app
+  if platform == :rails
+    after 'deploy:update_code', 'rails:config:to_app' # Copy shared config to app
+  end
   
 end

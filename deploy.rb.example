@@ -1,7 +1,7 @@
 set :cookbook, {
   :application => 'my_app',
   :repository  => 'git@github.com:user/my-app.git',
-  :base_dir    => '/var/www/apps',
+  :base_dir    => '/var/www',
   
   :platform     => :mongrel,  # Or :php
   :mongrel_port => 3000,
