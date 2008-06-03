@@ -1,7 +1,7 @@
 # Require helpers and recipes
 
-require File.expand_path('helpers.rb', File.dirname(__FILE__))
-Dir[    File.expand_path('book/*.rb',  File.dirname(__FILE__))].each do |f|
+require File.expand_path('helpers.rb',   File.dirname(__FILE__))
+Dir[    File.expand_path('recipes/*.rb', File.dirname(__FILE__))].each do |f|
   require f
 end
 

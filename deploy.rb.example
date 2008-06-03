@@ -28,5 +28,5 @@ set :cookbook, {
   }
 }
 
-# See vendor/plugins/cookbook/deploy.rb for more cookbook options
-require 'vendor/plugins/cookbook/deploy'
+# See cookbook/cookbook.rb for more cookbook options
+require 'cookbook/cookbook'
