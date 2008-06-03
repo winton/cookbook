@@ -4,8 +4,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     namespace :create do
       desc "Create database and user"
       task :default, :roles => :db do
-        db.create.db
-        db.create.user
+        #mysql.create.db
+        mysql.create.user
       end
       
       desc "Create database"

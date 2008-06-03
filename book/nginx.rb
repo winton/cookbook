@@ -1,6 +1,22 @@
 Capistrano::Configuration.instance(:must_exist).load do
 
   namespace :nginx do
+    desc "Restart nginx"
+    task :restart, :roles => :app do
+      deploy.nginx.stop
+      deploy.nginx.start
+    end
+
+    desc "Start nginx"
+    task :start, :roles => :app do
+      sudo "/etc/init.d/nginx start"
+    end
+
+    desc "Stop nginx"
+    task :stop, :roles => :app do
+      sudo "/etc/init.d/nginx stop"
+    end
+    
     namespace :config do
       desc "Copy vhost configs and generate htpasswd for staging"
       task :default, :roles => :app do
@@ -16,10 +32,10 @@ Capistrano::Configuration.instance(:must_exist).load do
             ]
           end
           sudo_each [
-            'mkdir -p #{nginx_dir}/vhosts',
-            'chmod 0644 #{nginx_dir}/vhosts'
+            "mkdir -p #{nginx_dir}/vhosts",
+            "chmod 0755 #{nginx_dir}/vhosts"
           ]
-          upload_from_erb "#{nginx_dir}/nginx.conf", binding, :chown => 'root', :chmod => '0644', :folder => 'debian'
+          upload_from_erb "#{nginx_dir}/nginx.conf", binding, :chown => 'root', :chmod => '0644', :folder => 'nginx'
         end
       end
       

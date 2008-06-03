@@ -20,6 +20,7 @@ set :cookbook, {
   },
   
   :sources => {
+    :git          => 'http://kernel.org/pub/software/scm/git/git-1.5.5.3.tar.gz',
     :lighttpd     => 'http://www.lighttpd.net/download/lighttpd-1.4.19.tar.gz',
     :nginx        => 'http://sysoev.ru/nginx/nginx-0.6.31.tar.gz',
     :ruby         => 'ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6-p114.tar.gz',

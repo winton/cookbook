@@ -11,6 +11,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         debian.aptitude.update
         debian.aptitude.upgrade
         debian.aptitude.essential
+        debian.install.git
         debian.install.lighttpd
         debian.install.mysql
         debian.install.nginx
@@ -95,7 +96,17 @@ Capistrano::Configuration.instance(:must_exist).load do
       end
     end
     
-    namespace :install do      
+    namespace :install do
+      desc "Install Git"
+      task :git, :roles => :app do
+        install_source(:git) do |path|
+          sudo_puts [
+            "aptitude install tcl8.4 tk8.4 gettext -q -y",
+            "cd #{path} && ./configure && make && sudo make install"
+          ]
+        end
+      end
+      
       desc "Install Lighttpd"
       task :lighttpd, :roles => :app do
         sudo_puts 'aptitude install libpcre3-dev libbz2-dev -q -y'

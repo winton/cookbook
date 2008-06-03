@@ -6,7 +6,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       task :default, :roles => :app do
         run "mkdir -p #{shared_path}/config"
         Dir[File.expand_path('../../../../config/cookbook/rails/*', File.dirname(__FILE__))].each do |f|
-          upload_from_erb "#{shared_path}/config/#{File.basename f}", :folder => 'rails'
+          upload_from_erb "#{shared_path}/config/#{File.basename(f, '.erb')}", binding, :folder => 'rails'
         end
       end
       
