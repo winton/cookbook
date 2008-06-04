@@ -8,8 +8,9 @@ set :cookbook, {
   :ssh_port     => 22,        # Or any unused port above 1024 (best practice)
   
   :production => {
-    :domain   => 'myapp.com',
-    :mongrels => 2            # Ports 3000-3001
+    :domain         => 'myapp.com',
+    :other_domains  => [ 'www.myapp.com' ],
+    :mongrels       => 2      # Ports 3000-3001
   },
   
   :staging => {

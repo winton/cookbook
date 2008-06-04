@@ -19,9 +19,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     set :db_table,       application + (stage == :staging ? "_#{stage}" : '')
     set :mongrel_port,   cookbook[:mongrel_port] + production_mongrels if stage == :staging
     
+    set :domain,         cookbook[stage][:domain]
+    set :domains,       (cookbook[stage][:other_domains] || []) + [ domain ]
     set :branch,         cookbook[stage][:branch] || 'master'
     set :mongrels,       cookbook[stage][:mongrels]
-    set :domain,         cookbook[stage][:domain]
     set :auth_user,      cookbook[stage][:auth_user]
     set :auth_pass,      cookbook[stage][:auth_pass]
 

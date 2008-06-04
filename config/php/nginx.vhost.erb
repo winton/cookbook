@@ -1,6 +1,6 @@
 server {
   listen       80;
-  server_name  <%= domain %>;
+  server_name  <%= domains.join ' ' %>;
 
   access_log  <%= deploy_to %>/shared/log/nginx.log main;
 

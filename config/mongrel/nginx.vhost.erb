@@ -11,7 +11,7 @@ server {
   client_max_body_size 50M;
 
   # sets the domain[s] that this vhost server requests for
-  server_name www.<%= domain %> <%= domain %>;
+  server_name <%= domains.join ' ' %>;
 
   # doc root
   root <%= deploy_to %>/current/public;
