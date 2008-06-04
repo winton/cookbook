@@ -16,7 +16,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     set :base_dir,       "#{cookbook[:base_dir]}/#{stage}"
     set :deploy_to,      "#{base_dir}/#{application}"
   
-    set :db_table,       application + (stage == 'staging' ? '_' + stage : '')
+    set :db_table,       application + (stage == :staging ? "_#{stage}" : '')
     set :mongrel_port,   cookbook[:mongrel_port] + production_mongrels if stage == :staging
     
     set :branch,         cookbook[stage][:branch] || 'master'

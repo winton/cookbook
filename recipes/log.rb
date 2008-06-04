@@ -4,18 +4,12 @@ Capistrano::Configuration.instance(:must_exist).load do
     namespace :tail do
       desc "Tail the Rails production log for this environment"
       task :production, :roles => :app do
-        run "tail -f #{shared_path}/log/#{stage}.log" do |channel, stream, data|
-          puts "\n#{channel[:server]} -> #{data}"
-          break if stream == :err
-        end
+        run_puts "tail -500 #{shared_path}/log/production.log"
       end
       
       desc "Tail the Mongrel logs this environment"
       task :mongrel, :roles => :app do
-        run "tail -f #{shared_path}/log/mongrel*.log" do |channel, stream, data|
-          puts "\n#{channel[:server]} -> #{data}"
-          break if stream == :err
-        end
+        run_puts "tail -500 #{shared_path}/log/mongrel*.log"
       end
     end
   end

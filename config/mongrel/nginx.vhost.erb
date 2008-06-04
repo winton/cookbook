@@ -30,7 +30,7 @@ server {
   location / {
 <% if auth_user %>
     auth_basic            "Restricted";
-    auth_basic_user_file  <%= nginx_config %>/htpasswd/<%= application %>_<%= stage %>;
+    auth_basic_user_file  <%= nginx_dir %>/htpasswd/<%= application %>_<%= stage %>;
 <% end %>
     
     # needed to forward user's IP address to rails

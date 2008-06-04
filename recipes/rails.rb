@@ -5,7 +5,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc "Copies all files in cookbook/rails to shared config"
       task :default, :roles => :app do
         run "mkdir -p #{shared_path}/config"
-        Dir[File.expand_path('../../../../config/cookbook/rails/*', File.dirname(__FILE__))].each do |f|
+        Dir[File.expand_path('../config/rails/*', File.dirname(__FILE__))].each do |f|
           upload_from_erb "#{shared_path}/config/#{File.basename(f, '.erb')}", binding, :folder => 'rails'
         end
       end
@@ -14,6 +14,11 @@ Capistrano::Configuration.instance(:must_exist).load do
       task :to_app, :roles => :app do
         run "cp -Rf #{shared_path}/config/* #{release_path}/config"
       end
+    end
+    
+    desc "Intialize Git submodules"
+    task :setup_git, :roles => :app do
+      run "cd #{release_path}; git submodule init; git submodule update"
     end
   end
 

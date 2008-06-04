@@ -3,17 +3,17 @@ Capistrano::Configuration.instance(:must_exist).load do
   namespace :deploy do
     desc "Restart mongrel cluster"
     task :restart, :roles => :app, :except => { :no_release => true } do
-      mongrel.restart if platform == :rails
+      mongrel.restart if platform == :mongrel
     end
 
     desc "Start mongrel cluster"
     task :start, :roles => :app do
-      mongrel.start if platform == :rails
+      mongrel.start if platform == :mongrel
     end
 
     desc "Stop mongrel cluster"
     task :stop, :roles => :app do
-      mongrel.stop if platform == :rails
+      mongrel.stop if platform == :mongrel
     end
   
     desc "Deploy a fresh app"
@@ -32,15 +32,13 @@ Capistrano::Configuration.instance(:must_exist).load do
         nginx.config.php
         deploy.default
       end
-      nginx.restart
+      nginx.start
     end
   
     desc "Stop servers and destroy all files"
     task :destroy, :roles => :app do
       deploy.stop
-      if platform == :mongrel
-        mongrel.config.destroy
-      end
+      mongrel.config.destroy if platform == :mongrel
       sudo "rm -Rf #{deploy_to}"
       nginx.config.destroy
       nginx.restart

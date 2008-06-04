@@ -4,7 +4,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     namespace :create do
       desc "Create database and user"
       task :default, :roles => :db do
-        #mysql.create.db
+        mysql.create.db
         mysql.create.user
       end
       
@@ -34,8 +34,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     namespace :destroy do
       desc "Destroy database and user"
       task :default, :roles => :db do
-        db.destroy.db
-        db.destroy.user
+        mysql.destroy.db
+        mysql.destroy.user
       end
       
       desc "Destroy database"

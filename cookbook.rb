@@ -8,6 +8,8 @@ end
 
 Capistrano::Configuration.instance(:must_exist).load do
   
+  ROOT = self
+  
   # See cookbook hash in config/deploy.rb
   
   cookbook[:port] = cookbook[:ssh_port]   # Port is too ambiguous for me
@@ -41,8 +43,9 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   # Events
 
-  on :before, 'setup_stage',  :except => [ :setup_stage, :staging, :testing ] # Executed before every task
-  if platform == :rails
+  on :before, 'setup_stage', :except => [ :staging, :testing ] # Executed before every task
+  if platform == :mongrel
+    after 'deploy:update_code', 'rails:setup_git'     # Initialize submodules
     after 'deploy:update_code', 'rails:config:to_app' # Copy shared config to app
   end
   

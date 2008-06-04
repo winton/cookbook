@@ -118,7 +118,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc 'Install MySQL'
       task :mysql, :roles => :db do
         sudo_puts 'aptitude install mysql-server mysql-client libmysqlclient15-dev libmysql-ruby -q -y'
-        mysql.config
+        ROOT.mysql.config
         puts [
           "\nIt is highly recommended you run mysql_secure_installation manually.",
           "See http://dev.mysql.com/doc/refman/5.1/en/mysql-secure-installation.html\n"
@@ -133,7 +133,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         end
         upload_from_erb '/etc/init.d/nginx', binding, :chown => 'root', :chmod => '+x', :folder => 'nginx'
         sudo '/usr/sbin/update-rc.d -f nginx defaults'
-        nginx.config.default
+        ROOT.nginx.config.default
       end
       
       desc "Install PHP"
@@ -160,6 +160,13 @@ Capistrano::Configuration.instance(:must_exist).load do
         end
         gems.update
         gems.install.all
+      end
+      
+      desc 'Install Sphinx'
+      task :sphinx, :roles => :app do
+        install_source(:sphinx) do |path|
+          sudo_puts "cd #{path} && ./configure && make && sudo make install"
+        end
       end
     end
   end

@@ -23,13 +23,31 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc 'Install Rails, HAML, and Mongrel'
       task :all do
         gems.install.haml
+        gems.install.hpricot
+        gems.install.chronic
+        gems.install.mime_types
         gems.install.mongrel
         gems.install.rails
+      end
+      
+      desc 'Install Chronic'
+      task :rails do
+        gem_install :chronic
       end
       
       desc 'Install HAML'
       task :haml do
         gem_install :haml, '--no-ri'
+      end
+      
+      desc 'Install Hpricot'
+      task :hpricot do
+        gem_install :hpricot
+      end
+      
+      desc 'Install Mime-types'
+      task :mime_types do
+        gem_install :mime_types
       end
       
       desc 'Install Mongrel'
