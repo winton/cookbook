@@ -32,7 +32,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         nginx.config.php
         deploy.default
       end
-      nginx.start
+      nginx.restart
     end
   
     desc "Stop servers and destroy all files"
