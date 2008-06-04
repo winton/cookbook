@@ -2,7 +2,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   
   namespace :debian do
     desc "Configure and install a fresh Debian server"
-    task :deploy do
+    task :setup do
       if yes("Have you created the user defined in config/deploy.rb? (See vendor/plugins/cookbook/README)")
         debian.config.sshd_config
         debian.config.iptables

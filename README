@@ -1,19 +1,25 @@
 = Cookbook
 
-Cookbook is both a collection of Capistrano recipes and an easier way to configure your deploy.rb file. The general idea is to take a clean Debian install and make it a fully featured Rails application server using solely Capistrano.
+Cookbook takes you from a fresh Debian/Ubuntu server to a monitored Nginx/Mongrel/Rails/PHP/fastcgi stack using purely Capistrano.
 
 
 == Install
 
-Add cookbook as a submodule in your Rails git project:
+Capify your rails project:
 
-  git submodule add git@github.com:winton/cookbook.git vendor/plugins/cookbook
+  capify .
 
-Create config/deploy.rb and config/cookbook:
+Add cookbook as a Git submodule:
 
-  rake cookbook:setup
+  git submodule add git@github.com:winton/cookbook.git config/cookbook
 
-Edit config/deploy.rb and run cap -T to check out all your nifty new recipes.
+Copy
+
+  config/cookbook/deploy.rb.example
+  to
+  config/deploy.rb
+  
+Edit deploy.rb to your liking.
 
 
 == Set up your fresh Debian server
@@ -30,7 +36,7 @@ Add a mongrel user:
   
   adduser mongrel
 
-Edit /etc/sudoers with file lock:
+Edit /etc/sudoers:
   
   visudo
 
@@ -40,14 +46,20 @@ Add this line to the end of the file. This gives the mongrel user "sudo without 
 
 On your machine:
   
-  cap server:setup
+  cap debian:setup
+  
+Its probably a good idea to restart the server after all that:
+  
+  sudo shutdown -r now
+  
+To deploy your app:
+
+  cap mysql:create:user
+  cap mysql:create:db
+  cap deploy:create
 
 
 TODO
-  Set up postfixadmin on nginx
-    Nginx php vhost
-      http://bc-dev.net/2008/05/07/mysql-nginx-and-php-on-ubuntu-804/
-    
   logrotated
     http://github.com/gabriel/capitate/tree/master/lib/recipes/logrotated.rb
   database cloning
