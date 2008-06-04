@@ -19,6 +19,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         debian.install.ruby
         debian.install.rubygems
         debian.install.gems
+        debian.install.monit
       end
     end
     
@@ -113,6 +114,15 @@ Capistrano::Configuration.instance(:must_exist).load do
         install_source(:lighttpd) do |path|
           sudo_puts "cd #{path} && ./configure && make && sudo make install"
         end
+      end
+      
+      desc 'Install Monit'
+      task :monit, :roles => :db do
+        sudo_puts 'aptitude install monit -q -y'
+        upload_from_erb [
+          '/etc/monit/monitrc',
+          '/etc/default/monit'
+        ], binding, :chown => 'root', :chmod => '0644', :folder => 'monit'
       end
       
       desc 'Install MySQL'

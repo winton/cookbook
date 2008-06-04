@@ -27,6 +27,14 @@ set :cookbook, {
     :ruby         => 'ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6-p114.tar.gz',
     :rubygems     => 'http://rubyforge.org/frs/download.php/35283/rubygems-1.1.1.tgz',
     :sphinx       => 'http://www.sphinxsearch.com/downloads/sphinx-0.9.8-rc2.tar.gz'
+  },
+  
+  :monit => {
+    :from       => 'monit@myapp.com'
+    :to         => 'me@myapp.com',
+    :port       => 2812,
+    :auth_user  => 'admin',
+    :auth_pass  => 'password'
   }
 }
 

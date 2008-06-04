@@ -47,7 +47,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       
       desc 'Install Mime-types'
       task :mime_types do
-        gem_install :mime_types
+        gem_install 'mime-types'
       end
       
       desc 'Install Mongrel'
