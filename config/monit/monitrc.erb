@@ -3,8 +3,7 @@ set logfile /var/log/monit.log
 set mailserver localhost
 set mail-format { from: <%= monit_from %> }
 set alert <%= monit_to %>
-set httpd port <%= monit_port %> and
-  allow <%= monit_auth_user %>:<%= monit_auth_pass %>
+set httpd port <%= monit_port %> and allow <%= monit_auth_user %>:<%= monit_auth_pass %>
 
 check process sshd with pidfile /var/run/sshd.pid
   start program  "/etc/init.d/ssh start"
@@ -23,7 +22,6 @@ check process nginx with pidfile /usr/local/nginx/logs/nginx.pid
   group www
   start program = "/etc/init.d/nginx start"
   stop program  = "/etc/init.d/nginx stop"
-  if failed port 80 protocol HTTP request / then restart
   if 5 restarts with 5 cycles then timeout
 
 check process spawn-fcgi with pidfile /var/run/spawn-fcgi.pid

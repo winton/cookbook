@@ -119,10 +119,6 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc 'Install Monit'
       task :monit, :roles => :db do
         sudo_puts 'aptitude install monit -q -y'
-        upload_from_erb [
-          '/etc/monit/monitrc',
-          '/etc/default/monit'
-        ], binding, :chown => 'root', :chmod => '0644', :folder => 'monit'
       end
       
       desc 'Install MySQL'
@@ -137,7 +133,8 @@ Capistrano::Configuration.instance(:must_exist).load do
       
       desc 'Install Nginx'
       task :nginx, :roles => :app do
-        sudo_puts 'aptitude install libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev -q -y'
+        # apache2-utils for htpasswd, rest for nginx build
+        sudo_puts 'aptitude install apache2-utils libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev -q -y'
         install_source(:nginx) do |path|
           sudo_puts "cd #{path} && ./configure --sbin-path=/usr/local/sbin --with-http_ssl_module && make && sudo make install"
         end
@@ -152,7 +149,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         upload_from_erb [
           '/usr/local/bin/php-fastcgi',
           '/etc/init.d/init-fastcgi'
-        ], binding, :chown => 'root', :chmod => '+x', :folder => 'debian'
+        ], binding, :chown => 'root', :chmod => '+x', :folder => 'php'
         sudo '/usr/sbin/update-rc.d -f init-fastcgi defaults'
       end
       

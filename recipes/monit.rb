@@ -9,10 +9,29 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
     
     namespace :config do
+      desc "Copy Monit config files"
+      task :default, :roles => :app do
+        upload_from_erb [
+          '/etc/monit/monitrc',
+          '/etc/default/monit'
+        ], binding, :chown => 'root', :chmod => '0644', :folder => 'monit'
+      end
+      
       desc "Add mongrels to monitrc"
       task :mongrel, :roles => :app do
         upload_from_erb '/etc/monit/mongrel', binding, :chown => 'root', :chmod => '0644', :folder => 'monit'
         sudo 'cd /etc/monit; cat mongrel >> monitrc; rm -f mongrel'
+      end
+      
+      desc "Add Nginx vhost entry for Monit"
+      task :nginx, :roles => :app do
+        if monit_auth_user
+          sudo_each [
+            "mkdir -p #{nginx_dir}/htpasswd",
+            "htpasswd -bc #{nginx_dir}/htpasswd/monit #{monit_auth_user} #{monit_auth_pass}"
+          ]
+        end
+        upload_from_erb "#{nginx_dir}/vhosts/monit.conf", binding, :folder => 'monit', :name => 'nginx.vhost'
       end
     end
   end

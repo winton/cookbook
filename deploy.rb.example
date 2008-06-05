@@ -30,7 +30,8 @@ set :cookbook, {
   },
   
   :monit => {
-    :from       => 'monit@myapp.com'
+    :domain     => 'monit.myapp.com',
+    :from       => 'monit@myapp.com',
     :to         => 'me@myapp.com',
     :port       => 2812,
     :auth_user  => 'admin',

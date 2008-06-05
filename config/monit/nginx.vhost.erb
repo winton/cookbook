@@ -1,0 +1,26 @@
+upstream monit_httpd {
+  server 127.0.0.1:<%= monit_port %>;
+}
+
+server {
+  listen 80;
+  
+  # sets the domain[s] that this vhost server requests for
+  server_name <%= monit_domain %>;
+
+  # vhost specific access log
+  access_log  /var/log/monit.nginx.log main;
+
+  location / {    
+    # needed to forward user's IP address
+    proxy_set_header  X-Real-IP  $remote_addr;
+
+    # needed for HTTPS
+    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect false;
+    proxy_max_temp_file_size 0;
+
+    proxy_pass http://monit_httpd;
+  }
+}
