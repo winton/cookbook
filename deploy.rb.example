@@ -1,10 +1,9 @@
 set :cookbook, {
-  :application => 'my_app',
-  :repository  => 'git@github.com:user/my-app.git',
-  :base_dir    => '/var/www',
-  
-  :platform     => :mongrel,  # Or :php
-  :mongrel_port => 3000,
+  :application  => 'my_app',
+  :base_dir     => '/var/www',
+  :repository   => 'git@github.com:user/my-app.git',
+ #:platform     => :php       # If enabled, you can remove all mongrel* lines
+  :mongrel_port => 3000,      # Your next app should be 3003
   :ssh_port     => 22,        # Or any unused port above 1024 (best practice)
   
   :production => {
@@ -20,6 +19,17 @@ set :cookbook, {
     :auth_pass => 'password'
   },
   
+  # Below is necessary for cap debian:setup
+  
+  :monit => {
+    :domain     => 'monit.myapp.com',
+    :from       => 'monit@myapp.com',
+    :to         => 'me@myapp.com',
+    :port       => 8100,
+    :auth_user  => 'admin',
+    :auth_pass  => 'password'
+  },
+  
   :sources => {
     :git          => 'http://kernel.org/pub/software/scm/git/git-1.5.5.3.tar.gz',
     :lighttpd     => 'http://www.lighttpd.net/download/lighttpd-1.4.19.tar.gz',
@@ -27,17 +37,9 @@ set :cookbook, {
     :ruby         => 'ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6-p114.tar.gz',
     :rubygems     => 'http://rubyforge.org/frs/download.php/35283/rubygems-1.1.1.tgz',
     :sphinx       => 'http://www.sphinxsearch.com/downloads/sphinx-0.9.8-rc2.tar.gz'
-  },
-  
-  :monit => {
-    :domain     => 'monit.myapp.com',
-    :from       => 'monit@myapp.com',
-    :to         => 'me@myapp.com',
-    :port       => 2812,
-    :auth_user  => 'admin',
-    :auth_pass  => 'password'
   }
 }
 
 # See config/cookbook/cookbook.rb for more cookbook options
+
 require 'config/cookbook/cookbook'

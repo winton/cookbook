@@ -126,8 +126,10 @@ Capistrano::Configuration.instance(:must_exist).load do
         sudo_puts 'aptitude install mysql-server mysql-client libmysqlclient15-dev libmysql-ruby -q -y'
         ROOT.mysql.config
         puts [
-          "\nIt is highly recommended you run mysql_secure_installation manually.",
-          "See http://dev.mysql.com/doc/refman/5.1/en/mysql-secure-installation.html\n"
+          '',
+          "It is highly recommended you run mysql_secure_installation manually.",
+          "See http://dev.mysql.com/doc/refman/5.1/en/mysql-secure-installation.html",
+          ''
         ].join("\n")
       end
       

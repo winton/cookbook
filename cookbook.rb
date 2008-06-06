@@ -20,10 +20,11 @@ Capistrano::Configuration.instance(:must_exist).load do
   # Default values
   
   set :port,                fetch(:port,                22)
-  set :user,                fetch(:user,                'mongrel')
+  set :user,                fetch(:user,                'deploy')
   set :stage,               fetch(:stage,               :production)
-  set :db_user,             fetch(:db_user,             'rails')
+  set :db_user,             fetch(:db_user,             'app')
   set :db_pass,             fetch(:db_pass,             '')
+  set :platform,            fetch(:platform,            :rails) # Or :php
   set :use_sudo,            fetch(:use_sudo,            false)
   set :auth_user,           fetch(:auth_user,           false)
   set :nginx_dir,           fetch(:nginx_dir,           '/usr/local/nginx/conf')
@@ -44,7 +45,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   # Events
 
   on :before, 'setup_stage', :except => [ :staging, :testing ] # Executed before every task
-  if platform == :mongrel
+  if platform == :rails
     after 'deploy:update_code', 'rails:setup_git'     # Initialize submodules
     after 'deploy:update_code', 'rails:config:to_app' # Copy shared config to app
   end

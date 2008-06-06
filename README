@@ -1,20 +1,36 @@
 = Cookbook
 
-Cookbook takes you from a fresh Debian/Ubuntu server to a multi-app Nginx/Mongrel/Rails/PHP/fastcgi/Monit stack using purely Capistrano. Oh yeah, it also takes care of app deployment and pretty much writes your deploy.rb file for you.
+Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/PHP stack using purely Capistrano. It also takes care of app deployment and pretty much writes your deploy.rb file for you.
+
+
+== The stack
+
+Git
+Nginx
+MySQL
+PHP (spawn-fcgi)
+Rails
+Ruby
+RubyGems
+  Haml
+  Hpricot
+  Chronic
+  Mime-Types
+  Mongrel
+  Mongrel Cluster
 
 
 == Install
 
-Capify your rails project:
+(Goto "Set up a PHP app" section if deploying a PHP project)
 
+Capify your project:
   capify .
 
 Add cookbook as a Git submodule:
-
   git submodule add git@github.com:winton/cookbook.git config/cookbook
 
 Copy
-
   config/cookbook/deploy.rb.example
   to
   config/deploy.rb
@@ -22,52 +38,68 @@ Copy
 Edit deploy.rb to your liking. Run cap -T to check out your new tasks.
 
 
-== Set up your fresh Debian server
+== Create the deploy user
 
-Log into your server as root. If you can't log in as root directly, but have the password (ServerBeach):
-
+Log into your remote server as root. If you can't log in as root directly, but have the password (ServerBeach):
   su
 
 Change root password if you haven't:
-  
   passwd
 
-Add a mongrel user:
-  
-  adduser mongrel
+Add a deploy user:
+  adduser deploy
 
 Edit /etc/sudoers:
-  
   visudo
 
-Add this line to the end of the file. This gives the mongrel user "sudo without password" privileges:
-  
-  mongrel ALL=NOPASSWD: ALL
+Add this line to the end of the file. This gives the deploy user "sudo without password" privileges:
+  deploy ALL=NOPASSWD: ALL
+
+
+== Set up your fresh Debian server
 
 On your machine:
-  
   cap debian:setup
   
 Its probably a good idea to restart the server after all that:
-  
   sudo shutdown -r now
   
-To deploy your app:
 
+== Deploy your app
+
+First deploy
   cap mysql:create:user
   cap mysql:create:db
   cap deploy:create
+  
+Subsequent deploys
+  cap deploy
 
 
-TODO
+== Set up a PHP app
+
+Create directories
+  config/
+  public/
+
+Move your site contents into the public directory. Follow instructions in "Install" section.
+
+Uncomment this line in deploy.rb:
+  #:platform => :php,
+
+
+== TODO
+
   logrotated
     http://github.com/gabriel/capitate/tree/master/lib/recipes/logrotated.rb
   database cloning
     http://github.com/engineyard/eycap/tree/master/lib/eycap/recipes/database.rb
     http://github.com/smtlaissezfaire/cap_db_dump/tree/master/lib/cap_db_dump/recipes.rb
-  monit setup
+  nginx ssl certs
 
-SOURCES
+
+== SOURCES
+
   http://github.com/gabriel/capitate/tree/master/lib/recipes
   http://github.com/denis/capone/tree/master/recipes
   http://github.com/nakajima/capistrano-bells/tree/master/recipes
