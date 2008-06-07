@@ -1,8 +1,10 @@
+<% if mongrels > 1 %>
 upstream mongrel_<%= application %>_<%= stage %> {
 <% mongrels.times do |x| %>
   server 127.0.0.1:<%= mongrel_port + x %>;
 <% end %>
 }
+<% end %>
 
 server {
   listen 80;
@@ -70,7 +72,11 @@ server {
     if (!-f $request_filename) {
       # Use other cluster name here if you are running multiple
       # virtual hosts.
+      <% if mongrels == 1 %>
+      proxy_pass http://127.0.0.1:<%= mongrel_port %>;
+      <% else %>
       proxy_pass http://mongrel_<%= application %>_<%= stage %>;
+      <% end %>
       break;
     }
   }

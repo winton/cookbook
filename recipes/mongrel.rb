@@ -9,19 +9,19 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
     
     namespace :config do      
-      desc "Copy mongrel config files"
+      desc "Generate remote application config"
       task :default, :roles => :app do
         mongrel.config.cluster
         mongrel.config.nginx
       end
 
-      desc "Render mongrel.yml.erb and copy to etc"
+      desc "Generate remote remote mongrel_cluster config"
       task :cluster, :roles => :app do
         sudo "mkdir -p #{mongrel_etc_dir}"
         upload_from_erb "#{mongrel_etc_dir}/#{application}_#{stage}.yml", binding, :folder => 'mongrel', :name => 'mongrel.yml'
       end
       
-      desc "Copy Nginx vhost"
+      desc "Generate remote Nginx vhost"
       task :nginx, :roles => :app do
         upload_from_erb "#{nginx_dir}/vhosts/#{application}_#{stage}.conf", binding, :folder => 'mongrel', :name => 'nginx.vhost'
       end

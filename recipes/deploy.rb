@@ -24,12 +24,12 @@ Capistrano::Configuration.instance(:must_exist).load do
       ]
       deploy.setup
       if platform == :rails
-        rails.config.default
         mongrel.config.default
-        nginx.config.mongrel
+        nginx.config.default
+        rails.config.default
         deploy.cold
       elsif platform == :php
-        nginx.config.php
+        php.config.default
         deploy.default
       end
       nginx.restart

@@ -2,28 +2,22 @@ Capistrano::Configuration.instance(:must_exist).load do
   
   namespace :debian do
     desc "Configure and install a fresh Debian server"
-    task :setup do
+    task :default do
       if yes("Have you created the user defined in config/deploy.rb? (See vendor/plugins/cookbook/README)")
-        debian.config.sshd_config
-        debian.config.iptables
-        debian.config.locales
-        debian.config.bash_profile      
-        debian.aptitude.update
-        debian.aptitude.upgrade
-        debian.aptitude.essential
-        debian.install.git
-        debian.install.lighttpd
-        debian.install.mysql
-        debian.install.nginx
-        debian.install.php
-        debian.install.ruby
-        debian.install.rubygems
-        debian.install.gems
-        debian.install.monit
+        debian.config.default
+        debian.aptitude.default
+        debian.install.default
       end
     end
     
     namespace :aptitude do
+      desc 'Run all tasks'
+      task :default do
+        aptitude.update
+        aptitude.upgrade
+        aptitude.essential
+      end
+      
       desc 'Aptitude update'
       task :update do
         sudo_puts 'aptitude update -q -y'
@@ -41,6 +35,14 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
     
     namespace :config do
+      desc 'Run all tasks'
+      task :default do
+        debian.config.sshd_config
+        debian.config.iptables
+        debian.config.locales
+        debian.config.bash_profile
+      end
+      
       desc "Uploads the bash_profile file in config/cookbook"
       task :bash_profile do
         question = [
@@ -98,6 +100,19 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
     
     namespace :install do
+      desc 'Run all tasks'
+      task :default do
+        debian.install.git
+        debian.install.lighttpd
+        debian.install.mysql
+        debian.install.nginx
+        debian.install.php
+        debian.install.ruby
+        debian.install.rubygems
+        debian.install.sphinx
+        debian.install.monit
+      end
+      
       desc "Install Git"
       task :git, :roles => :app do
         install_source(:git) do |path|
@@ -142,7 +157,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         end
         upload_from_erb '/etc/init.d/nginx', binding, :chown => 'root', :chmod => '+x', :folder => 'nginx'
         sudo '/usr/sbin/update-rc.d -f nginx defaults'
-        ROOT.nginx.config.default
+        ROOT.nginx.config.run_once.default
       end
       
       desc "Install PHP"
@@ -168,7 +183,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           sudo_puts "cd #{path} && ruby setup.rb"
         end
         gems.update
-        gems.install.all
+        gems.install
       end
       
       desc 'Install Sphinx'
