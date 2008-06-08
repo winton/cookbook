@@ -96,6 +96,7 @@ Uncomment this line in deploy.rb:
     http://github.com/engineyard/eycap/tree/master/lib/eycap/recipes/database.rb
     http://github.com/smtlaissezfaire/cap_db_dump/tree/master/lib/cap_db_dump/recipes.rb
   nginx ssl certs
+  sendmail install
 
 
 == SOURCES
