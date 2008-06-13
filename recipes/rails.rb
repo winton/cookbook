@@ -14,6 +14,29 @@ Capistrano::Configuration.instance(:must_exist).load do
       task :to_app, :roles => :app do
         run "cp -Rf #{shared_path}/config/* #{release_path}/config"
       end
+      
+      namespace :ultrasphinx do
+        desc "Configures ultrasphinx"
+        task :default, :roles => :app do
+          sudo "cd #{release_path}; rake RAILS_ENV=production ultrasphinx:configure; rake RAILS_ENV=production ultrasphinx:index;"
+        end
+        
+        desc "Stop ultrasphinx"
+        task :stop, :roles => :app do
+          sudo "cd #{release_path}; rake RAILS_ENV=production ultrasphinx:daemon:stop"
+        end
+        
+        desc "Start ultrasphinx"
+        task :start, :roles => :app do
+          sudo "cd #{release_path}; rake RAILS_ENV=production ultrasphinx:daemon:start"
+        end
+        
+        desc "Restart ultrasphinx"
+        task :restart, :roles => :app do
+          rails.config.ultrasphinx.stop
+          rails.config.ultrasphinx.start
+        end
+      end
     end
     
     desc "Intialize Git submodules"
