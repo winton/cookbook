@@ -15,20 +15,32 @@ Capistrano::Configuration.instance(:must_exist).load do
         run "cp -Rf #{shared_path}/config/* #{release_path}/config"
       end
       
+      desc "Configure attachment_fu"
+      task :attachment_fu, :roles => :app do
+        run_each [
+          "mkdir -p #{shared_path}/media",
+          "ln -sf #{shared_path}/media #{release_path}/public/media"
+        ]
+        sudo_each [
+          "mkdir -p #{release_path}/tmp/attachment_fu",
+          "chown -R #{user} #{release_path}/tmp/attachment_fu"
+        ]
+      end
+      
       namespace :ultrasphinx do
         desc "Configures ultrasphinx"
         task :default, :roles => :app do
-          sudo "cd #{release_path}; rake RAILS_ENV=production ultrasphinx:configure; rake RAILS_ENV=production ultrasphinx:index;"
+          sudo "cd #{release_path} && rake RAILS_ENV=production ultrasphinx:configure"
         end
         
         desc "Stop ultrasphinx"
         task :stop, :roles => :app do
-          sudo "cd #{release_path}; rake RAILS_ENV=production ultrasphinx:daemon:stop"
+          sudo "cd #{release_path} && rake RAILS_ENV=production ultrasphinx:daemon:stop"
         end
         
         desc "Start ultrasphinx"
         task :start, :roles => :app do
-          sudo "cd #{release_path}; rake RAILS_ENV=production ultrasphinx:daemon:start"
+          sudo "cd #{release_path} && rake RAILS_ENV=production ultrasphinx:daemon:start"
         end
         
         desc "Restart ultrasphinx"

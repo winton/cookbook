@@ -30,6 +30,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :nginx_dir,           fetch(:nginx_dir,           '/usr/local/nginx/conf')
   set :mysql_dir,           fetch(:mysql_dir,           '/etc/mysql')
   set :ultrasphinx,         fetch(:ultrasphinx,         false)
+  set :attachment_fu,       fetch(:attachment_fu,       false)
   set :mongrel_etc_dir,     fetch(:mongrel_etc_dir,     '/usr/local/etc/mongrel_cluster')
   set :mongrel_gem_dir,     fetch(:mongrel_gem_dir,     '/usr/local/lib/ruby/gems/1.8/gems/mongrel_cluster-1.0.5')
   set :staging_mongrels,    fetch(:staging_mongrels,    1)
@@ -45,12 +46,15 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   # Events
 
-  on :before, 'setup_stage', :except => [ :staging, :testing ] # Executed before every task
+  on :before, 'setup_stage', :except => [ :staging, :testing ]  # Executed before every task
   if platform == :rails
-    after 'deploy:update_code', 'rails:setup_git'          # Initialize submodules
-    after 'deploy:update_code', 'rails:config:to_app'      # Copy shared config to app
+    after 'deploy:update_code', 'rails:setup_git'               # Initialize submodules
+    after 'deploy:update_code', 'rails:config:to_app'           # Copy shared config to app
+    if attachment_fu
+      after 'deploy:update_code', 'rails:config:attachment_fu'  # Configure attachment_fu
+    end
     if ultrasphinx
-      after 'deploy:update_code', 'rails:config:ultrasphinx' # Configure ultrasphinx
+      after 'deploy:update_code', 'rails:config:ultrasphinx'    # Configure ultrasphinx
     end
   end
   
