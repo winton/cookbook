@@ -5,86 +5,102 @@ Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/P
 
 == The stack
 
-Git
-Nginx
-MySQL
-PHP (spawn-fcgi)
-Rails
-Ruby
-RubyGems
-  Haml
-  Hpricot
-  Chronic
-  Mime-Types
-  Mongrel
-  Mongrel Cluster
+- Git
+- Nginx
+- MySQL
+- PHP (spawn-fcgi)
+- Rails
+- Ruby
+- RubyGems
+  - Haml
+  - Hpricot
+  - Chronic
+  - Mime-Types
+  - Mongrel
+  - Mongrel Cluster
 
 
 == Install
 
 (Goto "Set up a PHP app" section if deploying a PHP project)
 
-Capify your project:
+=== Capify your project
+
   capify .
 
-Add cookbook as a Git submodule:
+=== Add cookbook as a Git submodule
+
   git submodule add git@github.com:winton/cookbook.git config/cookbook
 
-Copy
-  config/cookbook/deploy.rb.example
-  to
-  config/deploy.rb
+=== Copy deploy.rb
+
+Copy <tt>*config/cookbook/deploy.rb.example*</tt> to <tt>*config/deploy.rb*</tt>
   
 Edit deploy.rb to your liking. Run cap -T to check out your new tasks.
 
 
 == Create the deploy user
 
-Log into your remote server as root. If you can't log in as root directly, but have the password (ServerBeach):
+=== Log in remotely as root
+
+If you can't log in as root directly, but have the password (ServerBeach):
+
   su
 
-Change root password if you haven't:
+=== Change root's password
+
   passwd
 
-Add a deploy user:
+=== Add a deploy user
+
   adduser deploy
 
-Edit /etc/sudoers:
+=== Edit /etc/sudoers
+
   visudo
 
 Add this line to the end of the file. This gives the deploy user "sudo without password" privileges:
+
   deploy ALL=NOPASSWD: ALL
 
 
 == Set up your fresh Debian server
 
-On your machine:
+=== On your machine
+
   cap debian:setup
   
+=== On the server
+
 Its probably a good idea to restart the server after all that:
+
   sudo shutdown -r now
   
 
 == Deploy your app
 
-First deploy
+=== First deploy
+
   cap mysql:create:user
   cap mysql:create:db
   cap deploy:create
   
-Subsequent deploys
+=== Subsequent deploys
+
   cap deploy
 
 
 == Set up a PHP app
 
-Create directories
+=== Create directories
+
   config/
   public/
 
-Move your site contents into the public directory. Follow instructions in "Install" section.
+Move your site contents into the public directory. Follow instructions in the *Install* section.
 
 Uncomment this line in deploy.rb:
+
   #:platform => :php,
 
 
