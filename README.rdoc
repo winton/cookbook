@@ -1,6 +1,6 @@
 = Cookbook
 
-Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/PHP stack using purely Capistrano. It also takes care of app deployment and pretty much writes your deploy.rb file for you.
+Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/PHP stack using purely Capistrano. It also takes care of app deployment and pretty much writes your <tt>deploy.rb</tt> file for you.
 
 
 == The stack
@@ -22,7 +22,7 @@ Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/P
 
 == Install
 
-(Goto "Set up a PHP app" section if deploying a PHP project)
+(Goto *Set up a PHP app* section if deploying a PHP project)
 
 === Capify your project
 
@@ -34,9 +34,9 @@ Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/P
 
 === Copy deploy.rb
 
-Copy <tt>*config/cookbook/deploy.rb.example*</tt> to <tt>*config/deploy.rb*</tt>
+Copy <tt><b>config/cookbook/deploy.rb.example</b></tt> to <tt><b>config/deploy.rb</b></tt>
   
-Edit deploy.rb to your liking. Run cap -T to check out your new tasks.
+Edit <tt>deploy.rb</tt> to your liking. Run <tt>cap -T</tt> to check out your new tasks.
 
 
 == Create the deploy user
@@ -55,7 +55,7 @@ If you can't log in as root directly, but have the password (ServerBeach):
 
   adduser deploy
 
-=== Edit /etc/sudoers
+=== Edit <tt>/etc/sudoers</tt>
 
   visudo
 
