@@ -54,6 +54,25 @@ Capistrano::Configuration.instance(:must_exist).load do
           sudo_each "rm -f #{nginx_dir}/nginx.conf"
         end
       end
+      
+      namespace :ssl do
+        desc "Generate remote SSL key"
+        task :default, :roles => :app do
+          # http://www.geotrust.com/quickssl/csr
+          question = [
+            "This task creates cert/key and cert/csr. Press enter for all optional SSL questions.",
+            "Use these files when buying an SSL cert.",
+            '',
+            "Place the purchased cert in cert/cert. Set :ssl_cert => true in deploy.rb.",
+            "OK?"
+          ]
+          if yes(question)
+            system 'mkdir -p cert'
+            system 'openssl genrsa -out cert/key 1024'
+            system 'openssl req -new -key cert/key -out cert/csr'
+          end
+        end
+      end
     end
   end
 

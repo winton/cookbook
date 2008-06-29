@@ -53,7 +53,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
     
     desc "Updates my.cnf from the file in config/cookbook"
-    task :config do
+    task :config, :roles => :db do
       question = [
         "This task updates your server's my.cnf (MySQL config) with the one in config/cookbook.",
         "OK?"
@@ -61,6 +61,26 @@ Capistrano::Configuration.instance(:must_exist).load do
       if yes(question)
         upload_from_erb "#{mysql_dir}/my.cnf", binding, :chown => 'root', :chmod => '0644', :folder => 'mysql'
         sudo "/etc/init.d/mysql restart"
+      end
+    end
+    
+    namespace :backup do
+      desc "Backup database to local workstation"
+      task :to_local, :roles => :db do
+        to_server
+        system "mkdir -p ~/db_backups/#{stage}/#{application}"
+        get "#{shared_path}/db_backups/#{backup_name}.bz2", File.expand_path("~/db_backups/#{stage}/#{application}/#{backup_name}.bz2")
+      end
+      
+      desc "Backup database to server"
+      task :to_server, :roles => :db do
+        run "mkdir -p #{shared_path}/db_backups"
+        run "mysqldump --add-drop-table -u #{db_user} -p#{db_pass} #{db_table}_production | bzip2 -c > #{shared_path}/db_backups/#{backup_name}.bz2"
+      end
+      
+      def backup_name
+        now = Time.now
+        [ now.year, now.month, now.day ].join('-') + '.sql'
       end
     end
   end

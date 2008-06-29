@@ -26,8 +26,13 @@ Capistrano::Configuration.instance(:must_exist).load do
       end
       
       desc 'Install Chronic'
-      task :rails, :roles => :app do
+      task :chronic, :roles => :app do
         gem_install :chronic
+      end
+      
+      desc 'Install gchart'
+      task :gchart, :roles => :app do
+        gem_install :googlecharts
       end
       
       desc 'Install HAML'
@@ -38,6 +43,11 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc 'Install Hpricot'
       task :hpricot, :roles => :app do
         gem_install :hpricot
+      end
+      
+      desc 'Install Json'
+      task :json, :roles => :app do
+        gem_install :json
       end
       
       desc 'Install Mime-types'

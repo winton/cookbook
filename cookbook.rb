@@ -25,6 +25,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :db_user,             fetch(:db_user,             'app')
   set :db_pass,             fetch(:db_pass,             '')
   set :platform,            fetch(:platform,            :rails) # Or :php
+  set :ssl_cert,            fetch(:ssl_cert,            false)
   set :use_sudo,            fetch(:use_sudo,            false)
   set :auth_user,           fetch(:auth_user,           false)
   set :nginx_dir,           fetch(:nginx_dir,           '/usr/local/nginx/conf')
