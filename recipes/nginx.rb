@@ -56,7 +56,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       end
       
       namespace :ssl do
-        desc "Generate remote SSL key"
+        desc "Generate SSL key"
         task :default, :roles => :app do
           # http://www.geotrust.com/quickssl/csr
           question = [

@@ -40,8 +40,8 @@ Capistrano::Configuration.instance(:must_exist).load do
   # Git by default
   
   set :scm,                 :git
-  #set :deploy_via,          :remote_cache
-  #set :repository_cache,    'git_cache'
+  set :deploy_via,          :remote_cache
+  set :repository_cache,    'git_cache'
   
   ssh_options[:paranoid] = false
 
