@@ -19,7 +19,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       
       desc "Add mongrel cluster to monitrc"
       task :mongrel, :roles => :app do
-        upload_from_erb '/etc/monit/mongrel', binding, :chown => 'root', :chmod => '0644', :folder => 'monit'
+        upload_from_erb '/etc/monit/mongrel', binding, :folder => 'monit'
         sudo_each [
           'cp -f /etc/monit/monitrc /etc/monit/monitrc2',
           'chmod 777 /etc/monit/monitrc2',

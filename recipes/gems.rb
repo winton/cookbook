@@ -15,11 +15,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
     
     namespace :install do
-      desc 'Install all gems'
+      desc 'Install all standard gems'
       task :default, :roles => :app do
         gems.install.haml
         gems.install.hpricot
-        gems.install.chronic
         gems.install.mime_types
         gems.install.mongrel
         gems.install.rails

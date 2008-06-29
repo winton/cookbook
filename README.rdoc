@@ -14,7 +14,6 @@ Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/P
 - RubyGems
   - Haml
   - Hpricot
-  - Chronic
   - Mime-Types
   - Mongrel
   - Mongrel Cluster
