@@ -15,6 +15,11 @@ Capistrano::Configuration.instance(:must_exist).load do
         run "cp -Rf #{shared_path}/config/* #{release_path}/config"
       end
       
+      desc "Configure asset_packager" 
+      task :asset_packager do
+        run "source ~/.bash_profile && cd #{release_path} && rake RAILS_ENV=production asset:packager:build_all"
+      end
+      
       desc "Configure attachment_fu"
       task :attachment_fu, :roles => :app do
         run_each [

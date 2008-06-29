@@ -32,6 +32,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :mysql_dir,           fetch(:mysql_dir,           '/etc/mysql')
   set :ultrasphinx,         fetch(:ultrasphinx,         false)
   set :attachment_fu,       fetch(:attachment_fu,       false)
+  set :asset_packager,      fetch(:asset_packager,      false)
   set :mongrel_etc_dir,     fetch(:mongrel_etc_dir,     '/usr/local/etc/mongrel_cluster')
   set :mongrel_gem_dir,     fetch(:mongrel_gem_dir,     '/usr/local/lib/ruby/gems/1.8/gems/mongrel_cluster-1.0.5')
   set :staging_mongrels,    fetch(:staging_mongrels,    1)
@@ -51,6 +52,9 @@ Capistrano::Configuration.instance(:must_exist).load do
   if platform == :rails
     after 'deploy:update_code', 'rails:setup_git'               # Initialize submodules
     after 'deploy:update_code', 'rails:config:to_app'           # Copy shared config to app
+    if asset_packager
+      after 'deploy:update_code', 'rails:config:asset_packager' # Configure attachment_fu
+    end
     if attachment_fu
       after 'deploy:update_code', 'rails:config:attachment_fu'  # Configure attachment_fu
     end
