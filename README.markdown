@@ -9,6 +9,7 @@ The stack
 
 * Git
 * Nginx
+* Mongrel cluster
 * Monit
 * MySQL
 * PHP (Nginx w/ spawn-fcgi)
