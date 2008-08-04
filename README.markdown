@@ -63,7 +63,7 @@ Add this line to the end of the file. This gives the deploy user "sudo without p
 
 	deploy ALL=NOPASSWD: ALL
 
-Upload your SSH keys:
+### Upload your SSH keys
 
 	cap ssh:setup
 	
