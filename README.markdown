@@ -1,7 +1,7 @@
 Cookbook
 ========
 
-Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/PHP stack using purely Capistrano. It also takes care of app deployment and pretty much writes your **deploy.rb** file for you.
+Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/PHP stack using purely Capistrano. It also takes care of app deployment and pretty much writes your **config/deploy.rb** file for you.
 
 
 The stack
@@ -22,15 +22,15 @@ Install
 
 (Goto **Set up a PHP app** if deploying a PHP project)
 
-=== Capify your project
+### Capify your project
 
 	capify .
 
-=== Add cookbook as a Git submodule
+### Add cookbook as a Git submodule
 
 	git submodule add git@github.com:winton/cookbook.git config/cookbook
 
-=== Copy deploy.rb
+### Copy deploy.rb
 
 Copy **config/cookbook/deploy.rb.example** to **config/deploy.rb**
 	
@@ -40,21 +40,21 @@ Edit **deploy.rb** to your liking. Run `cap -T` to check out your new tasks.
 Create the deploy user
 ----------------------
 
-=== Log in remotely as root
+### Log in remotely as root
 
 If you can't log in as root directly, but have the password (ServerBeach):
 
 	su
 
-=== Change root's password
+### Change root's password
 
 	passwd
 
-=== Add a deploy user
+### Add a deploy user
 
 	adduser deploy
 
-=== Edit `/etc/sudoers`
+### Edit /etc/sudoers
 
 	visudo
 
@@ -66,11 +66,11 @@ Add this line to the end of the file. This gives the deploy user "sudo without p
 Set up your fresh Debian server
 -------------------------------
 
-=== On your machine
+### On your machine
 
 	cap debian:setup
 	
-=== On the server
+### On the server
 
 Its probably a good idea to restart the server after all that:
 
@@ -80,13 +80,13 @@ Its probably a good idea to restart the server after all that:
 Deploy your app
 ---------------
 
-=== First deploy
+### First deploy
 
 	cap mysql:create:user
 	cap mysql:create:db
 	cap deploy:create
 	
-=== Subsequent deploys
+### Subsequent deploys
 
 	cap deploy
 
@@ -94,7 +94,7 @@ Deploy your app
 Set up a PHP app
 ----------------
 
-=== Create directories
+### Create directories
 
 	config/
 	public/
