@@ -30,7 +30,7 @@ Install
 
 ### Add cookbook as a Git submodule
 
-	git submodule add git@github.com:winton/cookbook.git config/cookbook
+	git submodule add git://github.com:winton/cookbook.git config/cookbook
 
 ### Copy deploy.rb
 
