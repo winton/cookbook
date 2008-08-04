@@ -18,9 +18,10 @@ Capistrano::Configuration.instance(:must_exist).load do
   
     desc "Deploy a fresh app"
     task :create, :roles => :app do
+      mysql.create.db
       sudo_each [
         "mkdir -p #{base_dir}",
-        "chown -R mongrel:mongrel #{base_dir}"
+        "chown -R #{user}:#{user} #{base_dir}"
       ]
       deploy.setup
       if platform == :rails
@@ -42,6 +43,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       sudo "rm -Rf #{deploy_to}"
       nginx.config.destroy
       nginx.restart
+      mysql.destroy.db
     end
   end
   

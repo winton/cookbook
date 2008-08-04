@@ -4,8 +4,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc "Configure and install a fresh Debian server"
     task :default do
       if yes("Have you created the user defined in config/deploy.rb? (See vendor/plugins/cookbook/README)")
-        debian.config.default
         debian.aptitude.default
+        debian.config.default
         debian.install.default
       end
     end
@@ -123,7 +123,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         end
       end
       
-      desc "Install Lighttpd"
+      desc "Install Lighttpd" # Lighttpd install is purely for spawn-fcgi
       task :lighttpd, :roles => :app do
         sudo_puts 'aptitude install libpcre3-dev libbz2-dev -q -y'
         install_source(:lighttpd) do |path|
@@ -134,6 +134,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc 'Install Monit'
       task :monit, :roles => :db do
         sudo_puts 'aptitude install monit -q -y'
+        monit.config.default
       end
       
       desc 'Install MySQL'
@@ -146,6 +147,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           "See http://dev.mysql.com/doc/refman/5.1/en/mysql-secure-installation.html",
           ''
         ].join("\n")
+        ROOT.mysql.create.user
       end
       
       desc 'Install Nginx'

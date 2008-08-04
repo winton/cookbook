@@ -15,6 +15,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           '/etc/monit/monitrc',
           '/etc/default/monit'
         ], binding, :chown => 'root', :chmod => '0644', :folder => 'monit'
+        monit.config.nginx
       end
       
       desc "Add mongrel cluster to monitrc"

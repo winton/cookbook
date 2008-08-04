@@ -7,14 +7,15 @@ Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/P
 The stack
 ---------
 
-- Git
-- Nginx
-- Monit
-- MySQL
-- PHP (spawn-fcgi)
-- Rails
-- Ruby
-- RubyGems
+* Git
+* Nginx
+* Monit
+* MySQL
+* PHP (Nginx w/ spawn-fcgi)
+* Rails
+* Ruby
+* RubyGems
+* Sphinx
 
 
 Install
@@ -34,7 +35,7 @@ Install
 
 Copy **config/cookbook/deploy.rb.example** to **config/deploy.rb**
 	
-Edit **deploy.rb** to your liking. Run `cap -T` to check out your new tasks.
+Edit **config/deploy.rb** to your liking. Run `cap -T` to check out your new tasks.
 
 
 Create the deploy user
@@ -46,7 +47,7 @@ If you can't log in as root directly, but have the password (ServerBeach):
 
 	su
 
-### Change root's password
+### Change root's password if you already haven't
 
 	passwd
 
@@ -62,6 +63,12 @@ Add this line to the end of the file. This gives the deploy user "sudo without p
 
 	deploy ALL=NOPASSWD: ALL
 
+Upload your SSH keys:
+
+	cap ssh:setup
+	
+(Just answer no to the first question if you already have local keys generated.)
+
 
 Set up your fresh Debian server
 -------------------------------
@@ -69,6 +76,8 @@ Set up your fresh Debian server
 ### On your machine
 
 	cap debian:setup
+	
+(See **config/cookbook/recipes/debian.rb**. You might want to run the tasks individually to know what's going on.)
 	
 ### On the server
 
@@ -82,13 +91,28 @@ Deploy your app
 
 ### First deploy
 
-	cap mysql:create:user
-	cap mysql:create:db
 	cap deploy:create
+
+(See **config/cookbook/recipes/deploy.rb** to know what's going on here.)
+	
+Optionally set up log rotation and a monit entry for your mongrels:
+
+	cap log:rotate
+	cap monit:config:mongrel
 	
 ### Subsequent deploys
 
 	cap deploy
+
+
+Deploy staging
+--------------
+
+See *Deploy your app*, but replace `cap` with `cap staging`.
+
+Example:
+
+	cap staging deploy:create
 
 
 Set up a PHP app
