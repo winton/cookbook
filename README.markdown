@@ -24,17 +24,17 @@ Install
 
 (Goto **Set up a PHP app** if deploying a PHP project)
 
+### Install gem
+
+	gem install winton-cookbook
+
 ### Capify your project
 
 	capify .
 
-### Add cookbook as a Git submodule
-
-	git submodule add git://github.com:winton/cookbook.git config/cookbook
-
 ### Copy deploy.rb
 
-Copy **config/cookbook/deploy.rb.example** to **config/deploy.rb**
+Copy **[deploy.rb.example](http://github.com/winton/cookbook/tree/master%2Fdeploy.rb.example?raw=true)** to **config/deploy.rb**
 	
 Edit **config/deploy.rb** to your liking. Run `cap -T` to check out your new tasks.
 
