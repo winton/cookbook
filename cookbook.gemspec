@@ -12,12 +12,13 @@ Gem::Specification.new do |s|
   
   s.has_rdoc = false
   
-  s.files = %w(
+  s.files = Dir[*%w(
     config/**/*
     cookbook.rb
     cookbook_helpers.rb
     deploy.rb.example
     MIT-LICENSE
     README.markdown
-    recipes/*)
+    recipes/*
+  )]
 end
