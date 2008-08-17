@@ -50,7 +50,7 @@ def upload_from_erb(destination, bind=nil, options={})
     template = File.basename destination
     template = template[1..-1] if template[0..0] == '.'
     folder   = options[:folder] ? options[:folder] + '/' : ''
-    template = File.expand_path("config/#{folder}#{options[:name]||template}.erb", File.dirname(__FILE__))
+    template = File.expand_path("templates/#{folder}#{options[:name]||template}.erb", File.dirname(__FILE__))
     template = File.read template
     sudo "touch #{destination}"
     sudo "chown #{user} #{destination}"
