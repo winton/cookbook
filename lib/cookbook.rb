@@ -30,7 +30,9 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :auth_user,           fetch(:auth_user,           false)
   set :nginx_dir,           fetch(:nginx_dir,           '/usr/local/nginx/conf')
   set :mysql_dir,           fetch(:mysql_dir,           '/etc/mysql')
+  set :app_helpers,         fetch(:app_helpers,         false)
   set :ultrasphinx,         fetch(:ultrasphinx,         false)
+  set :thinking_sphinx,     fetch(:thinking_sphinx,     false)
   set :attachment_fu,       fetch(:attachment_fu,       false)
   set :asset_packager,      fetch(:asset_packager,      false)
   set :mongrel_etc_dir,     fetch(:mongrel_etc_dir,     '/usr/local/etc/mongrel_cluster')
@@ -52,6 +54,9 @@ Capistrano::Configuration.instance(:must_exist).load do
   if platform == :rails
     after 'deploy:update_code', 'rails:setup_git'               # Initialize submodules
     after 'deploy:update_code', 'rails:config:to_app'           # Copy shared config to app
+    if app_helpers
+      after 'deploy:update_code', 'rails:config:app_helpers'    # Set up app with app_helpers
+    end
     if asset_packager
       after 'deploy:update_code', 'rails:config:asset_packager' # Configure attachment_fu
     end
@@ -60,6 +65,9 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
     if ultrasphinx
       after 'deploy:update_code', 'rails:config:ultrasphinx'    # Configure ultrasphinx
+    end
+    if thinking_sphinx
+      after 'deploy:update_code', 'rails:config:thinking_sphinx'    # Configure thinking_sphinx
     end
   end
   
