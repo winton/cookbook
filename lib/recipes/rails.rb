@@ -42,23 +42,17 @@ Capistrano::Configuration.instance(:must_exist).load do
       namespace :thinking_sphinx do
         desc "Configures thinking_sphinx"
         task :default, :roles => :app do
-          Dir.chdir release_path do
-            sudo "rake RAILS_ENV=production ts:config"
-          end
+          sudo ";cd #{release_path} && rake RAILS_ENV=production ts:config"
         end
         
         desc "Stop thinking_sphinx"
         task :stop, :roles => :app do
-          Dir.chdir release_path do
-            sudo "rake RAILS_ENV=production ts:stop"
-          end
+          sudo ";cd #{release_path} && rake RAILS_ENV=production ts:stop"
         end
         
         desc "Start thinking_sphinx"
         task :start, :roles => :app do
-          Dir.chdir release_path do
-            sudo "rake RAILS_ENV=production ts:start"
-          end
+          sudo ";cd #{release_path} && rake RAILS_ENV=production ts:start"
         end
         
         desc "Restart thinking_sphinx"
