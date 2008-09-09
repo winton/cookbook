@@ -65,17 +65,17 @@ Capistrano::Configuration.instance(:must_exist).load do
       namespace :ultrasphinx do
         desc "Configures ultrasphinx"
         task :default, :roles => :app do
-          sudo "cd #{release_path} && rake RAILS_ENV=production ultrasphinx:configure"
+          sudo ";cd #{release_path} && rake RAILS_ENV=production ultrasphinx:configure"
         end
         
         desc "Stop ultrasphinx"
         task :stop, :roles => :app do
-          sudo "cd #{release_path} && rake RAILS_ENV=production ultrasphinx:daemon:stop"
+          sudo ";cd #{release_path} && rake RAILS_ENV=production ultrasphinx:daemon:stop"
         end
         
         desc "Start ultrasphinx"
         task :start, :roles => :app do
-          sudo "cd #{release_path} && rake RAILS_ENV=production ultrasphinx:daemon:start"
+          sudo ";cd #{release_path} && rake RAILS_ENV=production ultrasphinx:daemon:start"
         end
         
         desc "Restart ultrasphinx"

@@ -76,9 +76,11 @@ Set up your fresh Debian server
 
 ### On your machine
 
-	cap debian:setup
+You may want to run the commands in [debian:aptitude](http://github.com/winton/cookbook/tree/master%2Flib%2Flib%2Frecipes%2Fdebian.rb?raw=true) from the remote shell if it is your first time doing so.
 	
-(See **config/cookbook/recipes/debian.rb**. You might want to run the tasks individually to know what's going on.)
+	cap debian:aptitude
+	cap debian:config
+	cap debian:install
 	
 ### On the server
 

@@ -40,6 +40,8 @@ set :cookbook, {
   }
 }
 
-# See config/cookbook/cookbook.rb for more cookbook options
+# If installed from gem
+require 'cookbook'
 
-require 'config/cookbook/cookbook'
+# If installed from plugin
+# require 'vendor/plugins/cookbook/lib/cookbook'

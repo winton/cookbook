@@ -58,7 +58,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       task :mongrel, :roles => :app do
         gem_install :mongrel
         gem_install :mongrel_cluster
-        mongrel.config.survive_reboot
+        ROOT.mongrel.config.survive_reboot
       end
       
       desc 'Install Rails'

@@ -4,7 +4,7 @@ require 'erb'
 # Install
 
 def gem_install(name, options='')
-  sudo_puts "gem install #{name} #{options}"
+  sudo_puts "gem install #{name} #{options} --no-rdoc --no-ri -q"
 end
 
 def unpack_source(source)

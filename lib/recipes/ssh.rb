@@ -45,13 +45,13 @@ Capistrano::Configuration.instance(:must_exist).load do
         usr  = ask "Upload ssh public keys to which user? (default: #{user})", user
         keys = ask "Press enter to copy all public keys (~/.ssh/*.pub), or paste a key: ", get_ssh_keys
       
-        if k.empty?
+        if keys.empty?
           ssh.setup if yes("No keys found. Generate ssh keys now?")
         else
           sudo_each [
             "mkdir /home/#{usr}/.ssh",
             "touch /home/#{usr}/.ssh/authorized_keys",
-            "echo \"#{keys}\" >> /home/#{usr}/.ssh/authorized_keys",
+            "echo \"#{keys.strip}\" | sudo tee /home/#{usr}/.ssh/authorized_keys",
             "chmod 0700 /home/#{usr}/.ssh",
             "chmod 0600 /home/#{usr}/.ssh/authorized_keys",
             "chown -R #{usr} /home/#{usr}/.ssh",

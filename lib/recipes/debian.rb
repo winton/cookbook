@@ -118,7 +118,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         install_source(:git) do |path|
           sudo_puts [
             "aptitude install tcl8.4 tk8.4 gettext -q -y",
-            "cd #{path} && ./configure && make && sudo make install"
+            ";cd #{path} && ./configure && make && sudo make install"
           ]
         end
       end
@@ -127,27 +127,27 @@ Capistrano::Configuration.instance(:must_exist).load do
       task :lighttpd, :roles => :app do
         sudo_puts 'aptitude install libpcre3-dev libbz2-dev -q -y'
         install_source(:lighttpd) do |path|
-          sudo_puts "cd #{path} && ./configure && make && sudo make install"
+          sudo_puts ";cd #{path} && ./configure && make && sudo make install"
         end
       end
       
       desc 'Install Monit'
       task :monit, :roles => :db do
         sudo_puts 'aptitude install monit -q -y'
-        monit.config.default
+        ROOT.monit.config.default
       end
       
       desc 'Install MySQL'
       task :mysql, :roles => :db do
         sudo_puts 'aptitude install mysql-server mysql-client libmysqlclient15-dev libmysql-ruby -q -y'
         ROOT.mysql.config
+        ROOT.mysql.create.user
         puts [
           '',
           "It is highly recommended you run mysql_secure_installation manually.",
           "See http://dev.mysql.com/doc/refman/5.1/en/mysql-secure-installation.html",
           ''
         ].join("\n")
-        ROOT.mysql.create.user
       end
       
       desc 'Install Nginx'
@@ -155,7 +155,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         # apache2-utils for htpasswd, rest for nginx build
         sudo_puts 'aptitude install apache2-utils libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev -q -y'
         install_source(:nginx) do |path|
-          sudo_puts "cd #{path} && ./configure --sbin-path=/usr/local/sbin --with-http_ssl_module && make && sudo make install"
+          sudo_puts ";cd #{path} && ./configure --sbin-path=/usr/local/sbin --with-http_ssl_module && make && sudo make install"
         end
         upload_from_erb '/etc/init.d/nginx', binding, :chown => 'root', :chmod => '+x', :folder => 'nginx'
         sudo '/usr/sbin/update-rc.d -f nginx defaults'
@@ -175,14 +175,14 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc 'Install Ruby'
       task :ruby, :roles => :app do
         install_source(:ruby) do |path|
-          sudo_puts "cd #{path} && ./configure && make && sudo make install"
+          sudo_puts ";cd #{path} && ./configure && make && sudo make install"
         end
       end
       
       desc 'Install RubyGems'
       task :rubygems, :roles => :app do
         install_source(:rubygems) do |path|
-          sudo_puts "cd #{path} && ruby setup.rb"
+          run_puts "cd #{path} && sudo ruby setup.rb"
         end
         gems.update
         gems.install
@@ -191,7 +191,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc 'Install Sphinx'
       task :sphinx, :roles => :app do
         install_source(:sphinx) do |path|
-          sudo_puts "cd #{path} && ./configure && make && sudo make install"
+          sudo_puts ";cd #{path} && ./configure && make && sudo make install"
         end
       end
     end
