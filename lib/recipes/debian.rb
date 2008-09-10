@@ -164,7 +164,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       
       desc "Install PHP"
       task :php, :roles => :app do
-        sudo_puts 'aptitude install php5-cli php5-cgi php5-mysql php5-xcache -q -y'
+        sudo_puts 'aptitude install php5-cli php5-cgi php5-mysql php5-xcache php-pear php-mail php-net-smtp -q -y'
         upload_from_erb [
           '/usr/local/bin/php-fastcgi',
           '/etc/init.d/init-fastcgi'
