@@ -1,8 +1,8 @@
 <% mongrels.times do |x| %>
 check process mongrel_<%= application %>_<%= mongrel_port + x %> with pidfile <%= deploy_to %>/shared/pids/mongrel.<%= mongrel_port + x %>.pid
   group mongrel
-  start program = "mongrel_rails cluster::start -C <%= "#{mongrel_etc_dir}/#{application}_#{stage}.yml" %> --clean --only <%= mongrel_port + x %>"
-  stop program  = "mongrel_rails cluster::stop -C <%= "#{mongrel_etc_dir}/#{application}_#{stage}.yml" %> --clean --only <%= mongrel_port + x %>"
+  start program = "/usr/local/bin/mongrel_rails cluster::start -C <%= "#{mongrel_etc_dir}/#{application}_#{stage}.yml" %> --clean --only <%= mongrel_port + x %>"
+  stop program  = "/usr/local/bin/mongrel_rails cluster::stop -C <%= "#{mongrel_etc_dir}/#{application}_#{stage}.yml" %> --clean --only <%= mongrel_port + x %>"
   if failed host 127.0.0.1 port <%= mongrel_port + x %> protocol http with timeout 10 seconds then restart
   if totalmem is greater than 110.0 MB for 4 cycles then restart      # eating up memory?
   if cpu is greater than 50% for 2 cycles then alert                  # send an email to admin
