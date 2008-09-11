@@ -18,8 +18,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc "Set up app with app_helpers" 
       task :app_helpers do
         run "cd #{release_path} && script/plugin install git://github.com/winton/app_helpers.git"
-        run "cd #{release_path} && rake RAILS_ENV=production db=false app_helpers"
-        run "cd #{release_path} && rake RAILS_ENV=production plugins:install"
+        run "cd #{release_path} && rake RAILS_ENV=production quiet=true app_helpers"
       end
       
       desc "Configure asset_packager" 
