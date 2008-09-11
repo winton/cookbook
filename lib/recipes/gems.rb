@@ -22,6 +22,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         gems.install.mime_types
         gems.install.mongrel
         gems.install.rails
+        gems.install.redcloth
       end
       
       desc 'Install Chronic'
@@ -64,6 +65,11 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc 'Install Rails'
       task :rails, :roles => :app do
         gem_install :rails
+      end
+      
+      desc 'Install RedCloth'
+      task :redcloth, :roles => :app do
+        gem_install 'RedCloth'
       end
     end
   

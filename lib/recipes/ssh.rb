@@ -49,7 +49,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           ssh.setup if yes("No keys found. Generate ssh keys now?")
         else
           sudo_each [
-            "mkdir /home/#{usr}/.ssh",
+            "mkdir -p /home/#{usr}/.ssh",
             "touch /home/#{usr}/.ssh/authorized_keys",
             "echo \"#{keys.strip}\" | sudo tee /home/#{usr}/.ssh/authorized_keys",
             "chmod 0700 /home/#{usr}/.ssh",
