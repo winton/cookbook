@@ -143,7 +143,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         # http://www.howtoforge.com/mysecureshell_sftp_debian_etch
         sudo_puts 'aptitude install libssl0.9.7 ssh openssh-server -q -y'
         install_source(:mysecureshell) do |path|
-          sudo_puts ";cd mysecureshell* && ./configure && make && sudo make install"
+          sudo_puts ";cd ~/sources/mysecureshell* && ./configure && make && sudo make install"
         end
       end
       
