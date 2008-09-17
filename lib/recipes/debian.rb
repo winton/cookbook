@@ -104,6 +104,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       task :default do
         debian.install.git
         debian.install.lighttpd
+        debian.install.mysecureshell
         debian.install.mysql
         debian.install.nginx
         debian.install.php
@@ -135,6 +136,15 @@ Capistrano::Configuration.instance(:must_exist).load do
       task :monit, :roles => :db do
         sudo_puts 'aptitude install monit -q -y'
         ROOT.monit.config.default
+      end
+      
+      desc "Install MySecureShell"
+      task :mysecureshell, :roles => :app do
+        # http://www.howtoforge.com/mysecureshell_sftp_debian_etch
+        sudo_puts 'aptitude install libssl0.9.7 ssh openssh-server -q -y'
+        install_source(:mysecureshell) do |path|
+          sudo_puts ";cd #{path} && ./configure && make && sudo make install"
+        end
       end
       
       desc 'Install MySQL'
