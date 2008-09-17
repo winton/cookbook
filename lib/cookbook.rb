@@ -52,7 +52,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   on :before, 'setup_stage', :except => [ :staging, :testing ]  # Executed before every task
   if platform == :rails
-    after 'deploy:update_code', 'rails:setup_git'               # Initialize submodules
+    #after 'deploy:update_code', 'rails:setup_git'               # Initialize submodules
     after 'deploy:update_code', 'rails:config:to_app'           # Copy shared config to app
     if app_helpers
       after 'deploy:update_code', 'rails:config:app_helpers'    # Set up app with app_helpers
