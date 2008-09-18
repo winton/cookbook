@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'cookbook'
-  s.version = '1.0.3'
+  s.version = '1.1.0'
   s.date = '2008-08-16'
   
   s.summary     = "Turns a fresh Debian server into an autonomous Nginx/Rails/PHP stack using purely Capistrano"
