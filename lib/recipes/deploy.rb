@@ -39,7 +39,11 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc "Stop servers and destroy all files"
     task :destroy, :roles => :app do
       deploy.stop
-      mongrel.config.destroy if platform == :rails
+      if platform == :rails
+        mongrel.config.destroy
+      else
+        php.config.destroy
+      end
       sudo "rm -Rf #{deploy_to}"
       nginx.config.destroy
       nginx.restart

@@ -11,6 +11,11 @@ Capistrano::Configuration.instance(:must_exist).load do
       task :nginx, :roles => :app do
         upload_from_erb "#{nginx_dir}/vhosts/#{application}_#{stage}.conf", binding, :folder => 'php', :name => 'nginx.vhost'
       end
+      
+      desc "Destroy remote Nginx vhost"
+      task :destroy, :roles => :app do
+        sudo "rm -f #{nginx_dir}/vhosts/#{application}_#{stage}.conf"
+      end
     end
   end
   
