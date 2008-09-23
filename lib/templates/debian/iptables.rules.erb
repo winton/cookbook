@@ -20,10 +20,6 @@
 -A INPUT -p tcp --dport 443 -j ACCEPT
 
 
-# Allows IMAP
--A INPUT -p tcp --dport 143 -j ACCEPT
-
-
 # Allows SSH connections
 #
 # THE -dport NUMBER IS THE SAME ONE YOU SET UP IN THE SSHD_CONFIG FILE
