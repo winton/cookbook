@@ -31,6 +31,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :nginx_dir,           fetch(:nginx_dir,           '/usr/local/nginx/conf')
   set :mysql_dir,           fetch(:mysql_dir,           '/etc/mysql')
   set :app_helpers,         fetch(:app_helpers,         false)
+  set :rails_widget,        fetch(:rails_widget,        false)
   set :ultrasphinx,         fetch(:ultrasphinx,         false)
   set :thinking_sphinx,     fetch(:thinking_sphinx,     false)
   set :attachment_fu,       fetch(:attachment_fu,       false)
@@ -62,6 +63,9 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
     if attachment_fu
       after 'deploy:update_code', 'rails:config:attachment_fu'  # Configure attachment_fu
+    end
+    if rails_widget
+      after 'deploy:update_code', 'rails:config:rails_widget'  # Configure attachment_fu
     end
     if ultrasphinx
       after 'deploy:update_code', 'rails:config:ultrasphinx'    # Configure ultrasphinx

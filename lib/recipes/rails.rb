@@ -38,6 +38,11 @@ Capistrano::Configuration.instance(:must_exist).load do
         ]
       end
       
+      desc "Configure rails_widget"
+      task :rails_widget, :roles => :app do
+        run "cd #{release_path} && rake RAILS_ENV=production widget:production"
+      end
+      
       namespace :thinking_sphinx do
         desc "Configures thinking_sphinx"
         task :default, :roles => :app do
