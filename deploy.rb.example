@@ -6,6 +6,11 @@ set :cookbook, {
   :mongrel_port => 3000,      # Your next app should be 3003
   :ssh_port     => 22,        # Or any unused port above 1024 (best practice)
   
+  :app_helpers     => true,
+  :attachment_fu   => false,
+  :rails_widget    => true,
+  :thinking_sphinx => false,
+  
   :production => {
     :domain         => 'myapp.com',
     :other_domains  => [ 'www.myapp.com' ],

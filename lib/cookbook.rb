@@ -53,25 +53,25 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   on :before, 'setup_stage', :except => [ :staging, :testing ]  # Executed before every task
   if platform == :rails
-    #after 'deploy:update_code', 'rails:setup_git'               # Initialize submodules
-    after 'deploy:update_code', 'rails:config:to_app'           # Copy shared config to app
+    #after 'deploy:update_code', 'rails:setup_git'                # Initialize submodules
+    after 'deploy:update_code', 'rails:config:to_app'             # Copy shared config to app
     if app_helpers
-      after 'deploy:update_code', 'rails:config:app_helpers'    # Set up app with app_helpers
+      after 'deploy:update_code', 'rails:config:app_helpers'      # Set up app with app_helpers
     end
     if asset_packager
-      after 'deploy:update_code', 'rails:config:asset_packager' # Configure attachment_fu
+      after 'deploy:update_code', 'rails:config:asset_packager'   # Configure asset_packager
     end
     if attachment_fu
-      after 'deploy:update_code', 'rails:config:attachment_fu'  # Configure attachment_fu
+      after 'deploy:update_code', 'rails:config:attachment_fu'    # Configure attachment_fu
     end
     if rails_widget
-      after 'deploy:update_code', 'rails:config:rails_widget'  # Configure attachment_fu
+      after 'deploy:update_code', 'rails:config:rails_widget'     # Configure rails_widget
     end
     if ultrasphinx
-      after 'deploy:update_code', 'rails:config:ultrasphinx'    # Configure ultrasphinx
+      after 'deploy:update_code', 'rails:config:ultrasphinx'      # Configure ultrasphinx
     end
     if thinking_sphinx
-      after 'deploy:update_code', 'rails:config:thinking_sphinx'    # Configure thinking_sphinx
+      after 'deploy:update_code', 'rails:config:thinking_sphinx'  # Configure thinking_sphinx
     end
   end
   
