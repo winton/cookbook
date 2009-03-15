@@ -1,6 +1,8 @@
 Cookbook
 ========
 
+**This plugin is deprecated and has been replaced by [Ubistrano](http://github.com/winton/ubistrano).**
+
 Cookbook takes you from a fresh Debian/Ubuntu server to a complete Nginx/Rails/PHP stack using purely Capistrano. It also takes care of app deployment and pretty much writes your **config/deploy.rb** file for you.
 
 
